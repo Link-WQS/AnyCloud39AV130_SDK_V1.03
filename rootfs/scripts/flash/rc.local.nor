@@ -29,15 +29,15 @@ fi
 #/bin/mount -t squashfs /dev/mtdblock8 /app/app
 partition_app=`get_partition_dev APP`
 if [ "$partition_app" != "" ];then
-	echo "/bin/mount -t squashfs $partition_app /app/app"
-	/bin/mount -t squashfs $partition_app /app/app
+	echo "/bin/mount -t squashfs $partition_app /app"
+	/bin/mount -t squashfs $partition_app /app
 fi
 
 #/bin/mount -t jffs2 /dev/mtdblock9 /app/data
 partition_data=`get_partition_dev DATA`
 if [ "$partition_data" != "" ];then
-	echo "/bin/mount -t jffs2 $partition_data /app/data"
-	/bin/mount -t jffs2 $partition_data /app/data
+	echo "/bin/mount -t jffs2 $partition_data /data"
+	/bin/mount -t jffs2 $partition_data /data
 fi
 
 echo "starting mdev..."

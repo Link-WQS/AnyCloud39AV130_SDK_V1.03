@@ -83,11 +83,11 @@ ifconfig eth0 up
 
 # mount yaffs2 file-system.
 # mount -t yaffs2 /dev/mtdblock9 /data
-partition_data=`get_partition_dev DATA`
-if [ "$partition_data" != "" ];then
-	echo "/bin/mount -t yaffs2 $partition_data /data"
-	/bin/mount -t yaffs2 $partition_data /data
-fi
+# partition_data=`get_partition_dev DATA`
+# if [ "$partition_data" != "" ];then
+# 	echo "/bin/mount -t yaffs2 $partition_data /data"
+# 	/bin/mount -t yaffs2 $partition_data /data
+# fi
 
 #start system service
 /usr/sbin/service.sh start &

@@ -20,5 +20,5 @@
 # 目前把etc/目录作成jffs2文件系统，烧录到spi分区，在系统启动后再挂载到etc/目录下.
 # 如此对rootfs/etc/目录的写操作得以保存.
 ./mkfs.jffs2 -d rootfs/etc/config -s 256 -e 4096 -m none -o usr.jffs2
-./mkfs.jffs2 -d rootfs/app/data -s 256 -e 4096 -m none -o data.jffs2
+./mkfs.jffs2 -d rootfs/data -s 256 -e 4096 -m none -o data.jffs2
 
