@@ -1,5 +1,9 @@
 #include <fs.h>
 #include <common.h>
+#include <env.h>
+
+DECLARE_GLOBAL_DATA_PTR;
+
 #define UPGRADE_INFO_PATH "# File Parttion: "
 #define UPGRADE_VERSION_PATH "#<upgrade_bin_version="
 #define UPGRADE_IMAGE_BASE_PATH "# <- this is end of image parttion\n"
@@ -297,9 +301,18 @@ static int update_flash_partition(void)
             bin_size += upgrade.info[i].filesize;
         }
     }
-    // env_load();
-    env_set("uprade_image_version", upgrade.upgrade_version);
-    env_save();
+    ret = env_load();
+    if (ret) {
+        printf("[%s] skip env_save: env_load failed ret=%d\n",
+            __func__, ret);
+    } else if (gd->flags & GD_FLG_ENV_DEFAULT) {
+        printf("[%s] skip env_save: using default environment\n",
+            __func__);
+    } else {
+        env_set("uprade_image_version", upgrade.upgrade_version);
+        ret = env_save();
+        printf("[%s] env_save ret=%d\n", __func__, ret);
+    }
     mdelay(3000);
     return 0;
 }

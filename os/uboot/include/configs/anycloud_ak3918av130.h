@@ -199,7 +199,7 @@
     "read_kernel=sf probe 0:0 ${sf_hz} 0; sf read ${loadaddr} ${kernel_offset} ${kernel_size}\0" \
     "read_dtb=sf probe 0:0 ${sf_hz} 0; sf read ${fdtcontroladdr} ${dtb_offset} ${dtb_size}\0" \
     "boot_normal=env set bootargs console=ttySAK0,115200n8 root=/dev/mtdblock5 rootfstype=squashfs init=/sbin/init ${mtdparts} ${mem} ${memsize}; run read_kernel; run read_dtb;bootm ${loadaddr} - ${fdtcontroladdr}\0" \
-    "bootcmd=run boot_normal\0" \
+    "bootcmd=custom_upgrade; run boot_normal\0" \
     "logo_switch=0x0\0" \
     "bootargs_mode=0x0\0" \
     "sd_det_mode=0x0\0" \

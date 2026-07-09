@@ -663,7 +663,6 @@ static int run_main_loop(void)
 #ifdef FIXED_FDTCONTROLADDR
     env_set_hex("fdtcontroladdr", FIXED_FDTCONTROLADDR);
 #endif
-	run_command("custom_upgrade", 0);
 	for (;;)
 		main_loop();
 	return 0;
