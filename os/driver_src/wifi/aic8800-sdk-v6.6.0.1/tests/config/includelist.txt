@@ -1,0 +1,7 @@
+# Test Directory
+    src
+#if (env['TEST'] == 'tinyusb')
+#if (env['TUSB_DEMO'] == 'cdc_dual_ports')
+    src/tinyusb/device/cdc_dual_ports
+#endif #(env['TUSB_DEMO'] == 'cdc_dual_ports')
+#endif #(env['TEST'] == 'tinyusb')

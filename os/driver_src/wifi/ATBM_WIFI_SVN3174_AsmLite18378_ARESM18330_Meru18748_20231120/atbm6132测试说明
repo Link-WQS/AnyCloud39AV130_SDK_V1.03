@@ -1,0 +1,32 @@
+
+######驱动编译######
+
+1、将驱动源码压缩包atbm6132_driver.tar.gz放置在SDK根目录os/driver_src/wifi路径下，解压
+
+2、进入atbm6132_driver目录，执行：make，编译驱动
+
+3、编译完成后，生成如下文件：
+usb_wifi_install/atbm6132_wifi_usb.ko
+driver_install/atbm_cli
+driver_install/nimble_linux
+
+4、为了便于测试，将以上生成的文件拷贝到同一个文件夹下，同时把./ble_host/user_app/connect_ap.sh文件也拷贝过来。
+文件夹atbm6132u_test已经放置了测试所需的全部文件。
+
+######驱动测试######
+
+5、按照如下命令加载驱动，这里使用nfs方式测试：
+echo 8 > /proc/sys/kernel/printk
+mount -t nfs -o nolock 172.16.10.180:/home/zouyingfu/nfs  mnt/
+modprobe cfg80211
+modprobe mac80211
+modprobe usb-common
+modprobe usbcore
+insmod /usr/modules/ak_hcd.ko
+cd /mnt/atbm6132u_test/
+insmod atbm6132_wifi_usb.ko wifi_bt_comb=1
+./nimble_linux &
+cp connect_ap.sh /tmp/
+
+6、微信搜索小程序《ATBM配网》，完成蓝牙配网。
+具体使用方法参考驱动doc/下自带的文档：Linux下ATBM BLE DEMO 配网使用方法.pdf

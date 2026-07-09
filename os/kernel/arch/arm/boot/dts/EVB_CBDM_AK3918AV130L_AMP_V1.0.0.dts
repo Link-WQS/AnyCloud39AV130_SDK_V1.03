@@ -1,0 +1,109 @@
+/*
+ * AK3918AV130 dev board dts
+ *
+ * Copyright (C) 2020 Anyka(Guangzhou) Microelectronics Technology Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+#include "anycloud_ak3918av130.dtsi"
+#include "EVB_CBDM_AK3918AV130L_V1.0.0.dtsi"
+
+#define FASTSYS_IRQ_MEMORY_BASE     0x80000000
+#define FASTSYS_IRQ_MEMORY_SIZE     0x4000
+
+#define ARM9L_MEMORY_BASE        0x81400000
+#define ARM9L_MEMORY_SIZE        0xC0000    /* 768k*/
+#define ARM9L_VDEV0BUFFER_BASE   0x814C0000
+#define ARM9L_VDEV0BUFFER_SIZE   0x20000    /* 128KB*/
+#define ARM9L_VDEV0VRING0_BASE   0x814E0000
+#define ARM9L_VDEV0VRING0_SIZE   0x10000    /* 64KB*/
+#define ARM9L_VDEV0VRING1_BASE   0x814F0000
+#define ARM9L_VDEV0VRING1_SIZE   0x10000    /* 64KB*/
+#define ION_RESERVED_MEMORY_BASE     0x81500000
+#define ION_RESERVED_MEMORY_SIZE     0x1A80000    /* 26.5MB*/
+
+/ {
+    compatible = "anyka,ak3918av130";
+    model = "EVB_CBDM_AK3918AV130L_FASTSYS_V1.0.0 board";
+    version = "V1.0.00";
+
+    reserved-memory {
+        fastsys_irq_reserved: fastsys_irq_reserved@FASTSYS_IRQ_MEMORY_BASE {
+            /*compatible = "shared-dma-pool";*/
+            /*linux,cma-default;*/
+            /*reusable;*/
+            size = <FASTSYS_IRQ_MEMORY_BASE>;
+            reg = <FASTSYS_IRQ_MEMORY_BASE FASTSYS_IRQ_MEMORY_SIZE>;
+            status = "okay";
+        };
+
+        arm9l_dram: arm9l_dram@ARM9L_MEMORY_BASE {
+            size = <ARM9L_MEMORY_SIZE>;
+            reg = <ARM9L_MEMORY_BASE ARM9L_MEMORY_SIZE>;
+            no-map;
+            status = "okay";
+        };
+
+        vdev0buffer: vdev0buffer@ARM9L_VDEV0BUFFER_BASE {
+            compatible = "shared-dma-pool";
+            size = <ARM9L_VDEV0BUFFER_SIZE>;
+            reg = <ARM9L_VDEV0BUFFER_BASE ARM9L_VDEV0BUFFER_SIZE>;
+            no-map;
+            status = "okay";
+        };
+
+        vdev0vring0: vdev0vring0@ARM9L_VDEV0VRING0_BASE {
+            size = <ARM9L_VDEV0VRING0_SIZE>;
+            reg = <ARM9L_VDEV0VRING0_BASE ARM9L_VDEV0VRING0_SIZE>;
+            no-map;
+            status = "okay";
+        };
+
+        vdev0vring1: vdev0vring1@ARM9L_VDEV0VRING1_BASE {
+            size = <ARM9L_VDEV0VRING1_SIZE>;
+            reg = <ARM9L_VDEV0VRING1_BASE ARM9L_VDEV0VRING1_SIZE>;
+            no-map;
+            status = "okay";
+        };
+
+        dma_reserved: dma_reserved@RESERVED_MEMORY_BASE {
+            size = <ION_RESERVED_MEMORY_SIZE>;
+            reg = <ION_RESERVED_MEMORY_BASE ION_RESERVED_MEMORY_SIZE>;
+            status = "okay";
+        };
+    };
+
+    ion {
+        dma_reserved_heap: dma_reserved_heap {
+            base-address = <ION_RESERVED_MEMORY_BASE>;
+            size = <ION_RESERVED_MEMORY_SIZE>;
+            status = "okay";
+        };
+    };
+
+};
+
+&uart2 {
+    status = "disable";
+};
+
+&arm9l_rproc{
+    memory-region =  <&vdev0buffer>,<&arm9l_dram>,
+					<&vdev0vring0>, <&vdev0vring1>;
+    memory-mappings =
+			/* DA 	         len         PA */
+			/* DDR for arm9l  */
+			< ARM9L_MEMORY_BASE ARM9L_MEMORY_SIZE ARM9L_MEMORY_BASE >;
+    status = "okay";
+};
+

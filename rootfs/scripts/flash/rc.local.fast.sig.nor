@@ -1,0 +1,63 @@
+#!/bin/sh
+
+insmod /usr/modules/ak_efuse.ko
+insmod /usr/modules/ak_leds.ko
+insmod /usr/modules/ak_uio.ko
+#insmod /usr/modules/ak_npu.ko
+
+/etc/config/run_fast_app.sh 1
+#ak_fast_main &
+
+#单目，快启 , 内核态slice模式
+#ak_fast_aov_sample -v 1 -d 0 -b 1 -e 1000 &
+
+#单目，快启 + AOV, 内核态slice模式，AOV休眠5000ms
+#ak_fast_aov_sample -v 1 -d 1 -b 1 -e 5000 &
+
+#单目，只跑快启, 内核态帧模式
+#ak_fast_aov_sample -v 1 -d 0 -b 0 &
+
+#单目，只跑快启, 内核态slice模式
+#ak_fast_aov_sample -v 1 -d 0 -b 1 &
+
+echo "starting mdev..."
+/bin/echo /sbin/mdev > /proc/sys/kernel/hotplug
+mdev -s
+
+# note: can't recommend running other app before `mount` command.
+
+ifconfig lo 127.0.0.1
+
+#start system service
+
+#print kernel error default
+#echo 4 > /proc/sys/kernel/printk
+
+#start syslogd & klogd, log rotated 3 files(200KB) to /var/log/messages
+syslogd -D -n -O /var/log/messages -s 200 -b 3 & # -l prio
+klogd -n & # -c prio
+
+dmesg > /tmp/start_message
+
+## set min free reserve bytes
+echo 2048 > /proc/sys/vm/min_free_kbytes
+
+echo "/tmp/core_%e_%p_%t" > /proc/sys/kernel/core_pattern
+
+#insmod /usr/modules/ak_adc_key.ko
+insmod /usr/modules/ak_rtc.ko
+
+
+if [ -f "/data/app.sh" ]
+then
+	echo "/data/app.sh"
+	/data/app.sh
+elif [ -f "/etc/config/app.sh" ]
+then
+	echo "/etc/config/app.sh"
+	/etc/config/app.sh
+fi
+
+
+
+

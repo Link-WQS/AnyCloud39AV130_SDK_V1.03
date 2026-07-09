@@ -1,0 +1,38 @@
+menu "Rpmsg drivers"
+
+# RPMSG always gets selected by whoever wants it
+config RPMSG
+	tristate
+
+config ANYKA_RPMSG_ARM9L
+	tristate "anyka rpmsg driver for arm9l"
+	default n
+	select RPMSG
+	help
+	  Say y here to enable support for the arm9l rpmsg driver.
+
+config RPMSG_CTRL
+	tristate "anyka rpmsg driver for application"
+	default n
+	select RPMSG
+	help
+	  Say Y here to export rpmsg device files, usually found in /dev.
+	  They make it possible for user-space programs to create rpmsg
+	  endpoints device, it can be found in /dev/rpmsg%d.
+
+config RPMSG_CHAR
+	tristate "RPMSG device interface"
+	default n
+	depends on RPMSG
+	help
+	  Say Y here to export rpmsg endpoints as device files, usually found
+	  in /dev. They make it possible for user-space programs to send and
+	  receive rpmsg packets.
+
+config RPMSG_VIRTIO
+	tristate "Virtio RPMSG bus driver"
+	depends on HAS_DMA
+	select RPMSG
+	select VIRTIO
+
+endmenu

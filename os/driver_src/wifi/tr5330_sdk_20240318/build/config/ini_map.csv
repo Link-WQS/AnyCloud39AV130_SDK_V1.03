@@ -1,0 +1,10 @@
+menuconfig配置项,ini参数名,备注
+WSCFG_INI_DBAC_STA_GC_RATIO,dbac_sta_gc_ratio,
+WSCFG_INI_DBAC_STA_GO_RATIO,dbac_sta_go_ratio,
+CONFIG_INI_PROTOCOL_11AX,protocol_enable,
+CONFIG_INI_BLE_DISABLE_LL_PRIVACY,ble_disable_ll_privacy,
+CONFIG_INI_BLE_TV_RC_SCAN_INTERVAL,ble_tv_rc_scan_interval,
+CONFIG_INI_BLE_TV_RC_SCAN_WINDOW,ble_tv_rc_scan_window,
+CONFIG_INI_HOST_GPIO,power_gpio_idx,
+CONFIG_INI_BSLE_FRONT_SWITCH,bsle_front_switch,
+CONFIG_INI_BT_COEX_MODE,bt_coex_mode,

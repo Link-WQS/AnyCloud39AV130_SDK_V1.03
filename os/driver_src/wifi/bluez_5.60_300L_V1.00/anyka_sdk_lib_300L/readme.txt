@@ -1,0 +1,2 @@
+平台提供的linuxsdk中已经包含了libiconv库，只不过版本是1.14的。
+为了减小bluez依赖库大小，所以使用平台提供的iconv和charset库。

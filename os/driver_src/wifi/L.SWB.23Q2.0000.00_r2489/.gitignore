@@ -1,0 +1,8 @@
+*.o
+*.o.cmd
+.ssv6x5x.ko.cmd
+.tmp_versions/
+Module.symvers
+modules.order
+ssv6x5x.mod.c
+

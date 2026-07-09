@@ -1,0 +1,4 @@
+# user code
+  src/priv
+  src/pub
+  src/pub/hal

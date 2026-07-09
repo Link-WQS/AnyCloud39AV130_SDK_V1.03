@@ -1,0 +1,6 @@
+ANYCLOUD_KM01A BOARD
+M:	Fabio Estevam <fabio.estevam@nxp.com>
+S:	Maintained
+F:	board/anyka/anycloud_km01a/
+F:	include/configs/anycloud_km01a.h
+F:	configs/km01a_nor_defconfig

@@ -1,0 +1,488 @@
+{
+  "version": 1,
+  "qs_vi_info": [
+    {
+      "qs_vi_dev_info": {
+        "dev_id": 0,
+        "enable": 1,
+        "isp_id": 0,
+        "isp_path": "/mnt/isp.conf",
+        "crop": {
+          "left": 0,
+          "top": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "frame_rate": 0,
+        "mirror_en": 1,
+        "flip_en": 1,
+        "isp_3dnr_info": {
+          "isp_3dnr_total_len": 0,
+          "isp_3dnr_y_len": 0,
+          "isp_3dnr_u_len": 0,
+          "isp_3dnr_v_len": 0
+        },
+        "ircut_group_id": 0,
+        "led_group_id": 0,
+        "lumen_group_id": 1,
+        "fastae_info": {
+          "bining_mode": 0,
+          "fastae_mode": 0,
+          "ae_stable_range": 8,
+          "max_run_frames": 15,
+          "night_mode_light_select": 0,
+          "daynight_threshold": [900, 800],
+          "daynight_master_id": -1,
+          "ae_table_file": ""
+        }
+      },
+      "qs_vi_chn_info": [
+        {
+          "dev_id": 0,
+          "chn_id": 0,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "frame_depth": 1,
+          "data_type": 0,
+          "mode": 1,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_chn_id": 24,
+            "stitch_num": 2,
+            "stitch_index": 0,
+            "stitch_global_id": 0
+          },
+          "npu_attr": {
+            "npu_enable": 0,
+            "npu_chn_id": [-1, -1, -1, -1]
+          }
+        },
+        {
+          "dev_id": 0,
+          "chn_id": 1,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 640,
+            "height": 360
+          },
+          "frame_depth": 2,
+          "data_type": 0,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 640,
+            "height": 360
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_chn_id": 25,
+            "stitch_num": 2,
+            "stitch_index": 0,
+            "stitch_global_id": 1
+          },
+          "npu_attr": {
+            "npu_enable": 0,
+            "npu_chn_id": [-1, -1, -1, -1]
+          }
+        },
+        {
+          "dev_id": 0,
+          "chn_id": 16,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 320,
+            "height": 192
+          },
+          "frame_depth": 1,
+          "data_type": 4,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 320,
+            "height": 192
+          },
+          "stitch_attr": {
+            "stitch_mode": 0,
+            "stitch_chn_id": 0,
+            "stitch_num": 0,
+            "stitch_index": 0,
+            "stitch_global_id": 0
+          },
+          "npu_attr": {
+            "npu_enable": 0,
+            "npu_chn_id": [-1, -1, -1, -1]
+          }
+        }
+      ]
+    },
+    {
+      "qs_vi_dev_info": {
+        "dev_id": 1,
+        "enable": 1,
+        "isp_id": 0,
+        "isp_path": "/mnt/isp.conf",
+        "crop": {
+          "left": 0,
+          "top": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "frame_rate": 00,
+        "mirror_en": 1,
+        "flip_en": 1,
+        "isp_3dnr_info": {
+          "isp_3dnr_total_len": 0,
+          "isp_3dnr_y_len": 0,
+          "isp_3dnr_u_len": 0,
+          "isp_3dnr_v_len": 0
+        },
+        "ircut_group_id": 0,
+        "led_group_id": 0,
+        "lumen_group_id": 1,
+        "fastae_info": {
+          "bining_mode": 0,
+          "fastae_mode": 0,
+          "ae_stable_range": 8,
+          "max_run_frames": 15,
+          "night_mode_light_select": 0,
+          "daynight_threshold": [900, 800],
+          "daynight_master_id": 0,
+          "ae_table_file": ""
+        }
+      },
+      "qs_vi_chn_info": [
+        {
+          "dev_id": 1,
+          "chn_id": 2,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "frame_depth": 1,
+          "data_type": 0,
+          "mode": 1,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_chn_id": 24,
+            "stitch_num": 2,
+            "stitch_index": 1,
+            "stitch_global_id": 0
+          },
+          "npu_attr": {
+            "npu_enable": 0,
+            "npu_chn_id": [-1, -1, -1, -1]
+          }
+        },
+        {
+          "dev_id": 1,
+          "chn_id": 3,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 640,
+            "height": 360
+          },
+          "frame_depth": 2,
+          "data_type": 0,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 640,
+            "height": 360
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_chn_id": 25,
+            "stitch_num": 2,
+            "stitch_index": 1,
+            "stitch_global_id": 1
+          },
+          "npu_attr": {
+            "npu_enable": 0,
+            "npu_chn_id": [-1, -1, -1, -1]
+          }
+        },
+        {
+          "dev_id": 1,
+          "chn_id": 17,
+          "enable": 0,
+          "frame_rate": 0,
+          "res": {
+            "width": 320,
+            "height": 192
+          },
+          "frame_depth": 1,
+          "data_type": 4,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 320,
+            "height": 192
+          },
+          "stitch_attr": {
+            "stitch_mode": 0,
+            "stitch_chn_id": 0,
+            "stitch_num": 0,
+            "stitch_index": 0,
+            "stitch_global_id": 0
+          },
+          "npu_attr": {
+            "npu_enable": 0,
+            "npu_chn_id": [0, -1, -1, -1]
+          }
+        }
+      ]
+    }
+  ],
+  "qs_venc_info": [
+    {
+      "venc_id": 0,
+      "width": 1920,
+      "height": 2160,
+      "fps": 15,
+      "goplen": 30,
+      "target_kbps": 2048,
+      "max_kbps": 2048,
+      "profile": 0,
+      "br_mode": 4,
+      "initqp": 38,
+      "minqp": 25,
+      "maxqp": 35,
+      "jpeg_qlevel": 0,
+      "chroma_mode": 0,
+      "enc_out_type": 0,
+      "max_picture_size": 0,
+      "enc_level": 0,
+      "smart_mode": 0,
+      "smart_goplen": 0,
+      "smart_quality": 0,
+      "smart_static_value": 0,
+      "gdr_mode": 0,
+      "max_frame_size": 0
+    },
+    {
+      "venc_id": 1,
+      "width": 640,
+      "height": 720,
+      "fps": 15,
+      "goplen": 30,
+      "target_kbps": 2048,
+      "max_kbps": 2048,
+      "profile": 0,
+      "br_mode": 4,
+      "initqp": 38,
+      "minqp": 25,
+      "maxqp": 35,
+      "jpeg_qlevel": 0,
+      "chroma_mode": 0,
+      "enc_out_type": 0,
+      "max_picture_size": 0,
+      "enc_level": 0,
+      "smart_mode": 0,
+      "smart_goplen": 0,
+      "smart_quality": 0,
+      "smart_static_value": 0,
+      "gdr_mode": 0,
+      "max_frame_size": 0
+    },
+    {
+      "venc_id": 2,
+      "width": 640,
+      "height": 720,
+      "fps": 1,
+      "goplen": 1,
+      "target_kbps": 200,
+      "max_kbps": 200,
+      "profile": 0,
+      "br_mode": 4,
+      "initqp": 90,
+      "minqp": 20,
+      "maxqp": 42,
+      "jpeg_qlevel": 0,
+      "chroma_mode": 0,
+      "enc_out_type": 1,
+      "max_picture_size": 0,
+      "enc_level": 30,
+      "smart_mode": 0,
+      "smart_goplen": 0,
+      "smart_quality": 0,
+      "smart_static_value": 0,
+      "gdr_mode": 0,
+      "max_frame_size": 0
+    }
+  ],
+  "qs_video_info": [
+    {
+      "chn_id": 24,
+      "venc_id": 0,
+      "enable": 1,
+      "frame_rate": 30,
+      "frame_depth": 200,
+      "venc_encode_mode": 1
+    },
+    {
+      "chn_id": 25,
+      "venc_id": 1,
+      "enable": 1,
+      "frame_rate": 30,
+      "frame_depth": 200,
+      "venc_encode_mode": 1
+    },
+    {
+      "chn_id": 25,
+      "venc_id": 2,
+      "enable": 0,
+      "frame_rate": 1,
+      "frame_depth": 1,
+      "venc_encode_mode": 1
+    }
+  ],
+  "isp_info": [
+    {
+      "isp_id": 0,
+      "isp_path": "/mnt/isp.conf"
+    },
+    {
+      "isp_id": 1,
+      "isp_path": "/mnt/isp.conf"
+    }
+  ],
+  "ircut": [
+    {
+      "ircut_a_gpio": {
+        "nb": 59,
+        "value": 1
+      },
+      "ircut_b_gpio": {
+        "nb": -1,
+        "value": 0
+      }
+    }
+  ],
+  "led": [
+    {
+      "ircut_led_type": 0,
+      "irled_gpio": {
+        "nb": 26,
+        "value": 1
+      },
+      "whiteled_type": 0,
+      "whiteled_gpio": {
+        "nb": -1,
+        "value": 0
+      }
+    }
+  ],
+  "hw_lumi_sensor": [
+    {
+      "ain_index": 0,
+      "daynight_threshold": 82
+    },
+    {
+      "ain_index": 1,
+      "daynight_threshold": 82
+    }
+  ],
+  "audio_info": {
+    "ai_info": {
+      "id": -1,
+      "sample_rate": 8000,
+      "channels": 1,
+      "sample_bits": 16,
+      "period_bytes": 1024,
+      "periods": 16,
+      "dev_type": 0,
+      "gain": 5,
+      "data_type": 0,
+      "reserved": 0
+    },
+    "ao_info": {
+      "id": -1,
+      "sample_rate": 8000,
+      "channels": 1,
+      "sample_bits": 16,
+      "period_bytes": 1024,
+      "periods": 16,
+      "dev_type": 0,
+      "gain": 4,
+      "data_type": 0,
+      "data_src": 0,
+      "file_path": "/tmp/1.pcm",
+      "reserved": 0
+    }
+  },
+  "npu_info": [
+    {
+      "chn_id": -1,
+      "model_type": 0,
+      "model_path": "/usr/sbin/model_0x0A000000_V1.1.0.bin"
+    },
+	{
+      "chn_id": -1,
+      "model_type": 0,
+      "model_path": "/usr/sbin/model_0x0A000000_V1.1.0.bin"
+    },
+	{
+      "chn_id": -1,
+      "model_type": 0,
+      "model_path": "/usr/sbin/model_0x0A000000_V1.1.0.bin"
+    },
+	{
+      "chn_id": -1,
+      "model_type": 0,
+      "model_path": "/usr/sbin/model_0x0A000000_V1.1.0.bin"
+    }
+  ],
+  "little_core_info": {
+    "board_name": "ak3918av130n",
+    "reserved": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+}

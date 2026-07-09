@@ -1,0 +1,147 @@
+
+
+comment "Configure the compilation environment"
+
+# compiler
+choice
+	prompt "compiler"
+	default WSCFG_USING_GCC
+
+config WSCFG_USING_GCC
+	bool "using gcc"
+
+config WSCFG_USING_LLVM_CLANG
+	bool "using llvm clang"
+
+endchoice
+
+config WSCFG_CROSS_COMPILE
+	string "Configure the compilation toolchain"
+	--help--
+		Configure the compilation toolchain, similar to the kernel style configuration
+
+if WSCFG_USING_LLVM_CLANG
+config WSCFG_CLANG_PATH
+	string "clang excecutable binary directory path"
+    --help--
+        specify the clang excecutable binary path. using "/opt/clang/bin" for "/opt/clang/bin/clang" etc.
+endif
+
+config WSCFG_KERNEL_DIR
+	string "Configure the kernel dir"
+	--help--
+		Configure the kernel directory for compiling the driver
+
+config WSCFG_EXTRA_CFLAGS
+	string "extra cflags for kernel module build"
+    --help--
+        specify the extra cflags for kernel module build. some host may need "-Wno-error=missing-braces" as example.
+
+config WSCFG_EXTRA_PARAMS
+	string "extra compilation params for kernel module build"
+    --help--
+        specify the extra compilation params for kernel module build. some host may need "LLVM=1 LLVM_IAS=1" as example.
+
+# arch
+choice
+	prompt "Arch"
+	default WSCFG_ARCH_ARM
+
+config WSCFG_ARCH_ARM
+	bool "arm"
+
+config WSCFG_ARCH_CUSTOM
+	bool "custom"
+
+if WSCFG_ARCH_CUSTOM
+config WSCFG_ARCH_NAME
+	string "Configure the arch name"
+endif
+
+endchoice
+
+if !WSCFG_ARCH_CUSTOM
+config WSCFG_ARCH_NAME
+	string
+	default "arm" if WSCFG_ARCH_ARM
+endif
+
+# board
+config BOARD_ASIC
+	bool
+	default y
+
+config BOARD_FPGA_WIFI
+	bool
+	default y if BOARD_FPGA
+
+config BOARD_ASIC_WIFI
+	bool
+	default y if BOARD_ASIC
+
+
+# bus
+choice
+	prompt "Bus type"
+	default WSCFG_BUS_SDIO
+
+config WSCFG_BUS_SDIO
+	bool "sdio"
+
+config WSCFG_BUS_USB
+	bool "usb"
+
+config WSCFG_BUS_UART
+	bool "uart"
+
+endchoice
+
+# os
+config WSCFG_LINUX
+	bool
+	default y
+
+
+# config OS macro
+config _PRE_OS_VERSION_LINUX
+	int
+	default 0
+
+config _PRE_OS_VERSION_WIN32
+	int
+	default 1
+
+config _PRE_OS_VERSION_WINDOWS
+	int
+	default 2
+
+config _PRE_OS_VERSION_RAW
+	int
+	default 3
+
+config _PRE_OS_VERSION_HiRTOS
+	int
+	default 4
+
+config _PRE_OS_VERSION_WIN32_RAW
+	int
+	default 5
+
+config _PRE_OS_VERSION_LITEOS
+	int
+	default 6
+
+config _PRE_OS_VERSION_ANDROID
+	int
+	default 7
+
+config _PRE_OS_VERSION
+	int
+	default _PRE_OS_VERSION_LINUX if WSCFG_LINUX
+	default _PRE_OS_VERSION_WIN32 if WSCFG_WIN32
+	default _PRE_OS_VERSION_WINDOWS if WSCFG_WINDOWS
+	default _PRE_OS_VERSION_RAW if WSCFG_RAW
+	default _PRE_OS_VERSION_HiRTOS if WSCFG_HiRTOS
+	default _PRE_OS_VERSION_WIN32_RAW if WSCFG_WIN32_RAW
+	default _PRE_OS_VERSION_LITEOS if WSCFG_LITEOS
+	default _PRE_OS_VERSION_ANDROID if WSCFG_ANDROID

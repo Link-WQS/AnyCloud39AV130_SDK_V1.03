@@ -1,0 +1,37 @@
+mainmenu "$(WSCFG_MENUCONFIG_TITLE)"
+
+menu "build"
+rsource "build/Kconfig"
+endmenu
+
+menu "MFG"
+orsource "build/config/Kconfig"
+endmenu
+
+menu "WiFi"
+rsource "driver/wifi/Kconfig"
+endmenu
+
+menu "Platform"
+rsource "driver/platform/Kconfig"
+endmenu
+
+menu "BLE"
+config WSCFG_BLE_COMPILE_BY_DEFAULT
+	bool "Compile ble by default"
+	default y
+	--help--
+		Turn on this option, and execute "make" or "make all" will compile ble
+
+rsource "driver/bsle/ble_driver/Kconfig"
+endmenu
+
+menu "SLE"
+config WSCFG_SLE_COMPILE_BY_DEFAULT
+	bool "Compile sle by default"
+	default y
+	--help--
+		Turn on this option, and execute "make" or "make all" will compile sle
+
+rsource "driver/bsle/sle_driver/Kconfig"
+endmenu

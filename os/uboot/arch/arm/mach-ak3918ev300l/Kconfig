@@ -1,0 +1,22 @@
+if ARCH_AK3918EV300L
+
+config AK3918EV300L
+	bool "Enable AK3918EV300L support"
+
+choice
+	prompt "AK3918EV300L board select"
+	optional
+
+	config TARGET_ANYCLOUD_AK3918EV300L
+	bool "Support anycloud_ak3918ev300l"
+	select CPU_ARM926EJS
+	select SUPPORT_SPL
+
+endchoice
+
+config SYS_SOC
+	default "ak3918ev300l"
+
+source "board/anyka/anycloud_ak3918ev300l/Kconfig"
+
+endif

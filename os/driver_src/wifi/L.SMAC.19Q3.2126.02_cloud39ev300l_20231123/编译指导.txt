@@ -1,0 +1,11 @@
+驱动编译方法；
+make KSRC=XXX/kbd
+make install
+
+驱动加载流程：
+modprobe usb-common
+modprobe usbcore
+modprobe cfg80211
+modprobe mac80211
+insmod /usr/modules/ak_hcd.ko
+insmod ssv6x5x.ko stacfgpath=/mnt/ssv6x5x-wifi.cfg

@@ -1,0 +1,26 @@
+if ARCH_AK37E
+
+config AK37E
+	bool "Enable AK37E support"
+
+choice
+	prompt "AK37E board select"
+	optional
+
+	config TARGET_ANYCLOUD_AK37E
+	bool "Support anycloud_ak37e"
+	select CPU_ARM926EJS
+	select SUPPORT_SPL
+
+endchoice
+
+config SYS_SOC
+	default "ak37e"
+
+config AK37E_V2
+    bool Sky37Ev2
+    default n
+
+source "board/anyka/anycloud_ak37e/Kconfig"
+
+endif

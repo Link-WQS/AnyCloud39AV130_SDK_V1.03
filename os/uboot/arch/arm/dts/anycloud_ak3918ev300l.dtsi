@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * ak3918ev300l SoC device tree source
+ *
+ */
+#include "anycloud_ak3918ev300l_common.dtsi"

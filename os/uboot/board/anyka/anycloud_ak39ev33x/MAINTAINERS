@@ -1,0 +1,6 @@
+ANYCLOUD_AK39EV33X BOARD
+M:	Fabio Estevam <fabio.estevam@nxp.com>
+S:	Maintained
+F:	board/anyka/anycloud_ak39ev33x/
+F:	include/configs/anycloud_ak39ev33x.h
+F:	configs/anycloud_ak39ev33x_defconfig

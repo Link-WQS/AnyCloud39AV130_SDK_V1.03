@@ -1,0 +1,55 @@
+10
+
+dir
+3175
+svn://192.168.10.160/wifi_prj/atbm_wifi_40M_mini/ble_host/nimble_v42/porting/nimble/include
+svn://192.168.10.160
+
+
+
+2023-08-08T02:40:29.751713Z
+2922
+muqing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6fd8eda4-f0a3-41d7-8e36-ec94bf435316
+
+log
+dir
+
+modlog
+dir
+
+os
+dir
+
+sysinit
+dir
+
+hal
+dir
+
+nimble
+dir
+
+mem
+dir
+
+stats
+dir
+
+syscfg
+dir
+

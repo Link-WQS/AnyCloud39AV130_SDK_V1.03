@@ -1,0 +1,165 @@
+
+config _PRE_PLAT_SHA256SUM_CHECK
+	bool "Enable upgrade package verification"
+	default y
+	--help--
+		Verify the integrity of the upgrade package of the device bin
+
+config WSCFG_ONEIMAGE
+	bool "Enable oneimage"
+	default n
+	--help--
+		oneimage is used to resolve number conflicts
+
+menuconfig WSCFG_PLAT_VARIABLE_FEATRUE
+	bool "Enable enhanced features"
+	default y
+	--help--
+		Enhanced feature master switch on platform side.
+		Enhanced features are features that can be turned on and off at any time.
+		Generally, turning on and off these features will not cause major functional problems
+
+if WSCFG_PLAT_VARIABLE_FEATRUE
+
+	menuconfig WSCFG_PLAT_DIAG_LOG_OUT
+		bool "Enable diag log out"
+		default y
+		--help--
+			Platform log output master switch
+
+	if WSCFG_PLAT_DIAG_LOG_OUT
+		config CONFIG_DIAG_SUPPORT_SOCKET
+			bool "Enable diag socket support"
+			default y
+
+		config CONFIG_DIAG_SUPPORT_UART
+			bool "Enable diag uart support"
+			default y
+
+		config CONFIG_DIAG_SUPPORT_LOCAL_LOG
+			bool "Enable diag local log support"
+			default y
+
+		config CONFIG_DFX_SUPPORT_SHELL_PROC
+			bool "Enable dfx shell proc"
+			default y
+			depends on CONFIG_DIAG_SUPPORT_SOCKET
+	endif
+
+	config CONFIG_PLAT_SUPPORT_DFR
+		bool "Enable Plat DFR"
+		default y
+		depends on WSCFG_LINUX
+
+	config CONFIG_PLAT_DFR_OUTPUT_PATH
+		string "Dfr Output Path, The Path Must Exist, Example : '/etc/tr5330' "
+		default "/etc/tr5330"
+		depends on CONFIG_PLAT_SUPPORT_DFR
+		--help--
+			dfr output path, the path must exist, example : '/etc/tr5330'
+
+	config CONFIG_HCC_SUPPORT_TEST
+		bool "Enable Plat Hcc Test"
+		default y
+
+	config CONFIG_HCC_ERROR_PRINT
+		bool "Enable Plat Hcc Error Print"
+		default y
+endif
+
+config _PRE_PLAT_HCC_SDIO
+	bool "Enable hcc on SDIO"
+	default y
+	depends on WSCFG_BUS_SDIO
+	--help--
+		Enable hcc on SDIO
+
+config _PRE_PLAT_HCC_USB
+	bool "Enable hcc on USB"
+	default y
+	depends on WSCFG_BUS_USB
+	--help--
+		Enable hcc on USB
+
+config _PRE_PLAT_HCC_UART
+	bool "Enable hcc on UART"
+	default n
+	depends on WSCFG_BUS_UART
+	--help--
+		Enable hcc on UART
+
+config CONFIG_PLAT_UART_IO_CFG
+	bool "Enable cfg on uart io"
+	default n
+	depends on _PRE_PLAT_HCC_UART
+	--help--
+		Enable CFG on UART_IO
+
+config CONFIG_HCC_USB_ZLP_FIXME
+	bool "HCC fixme URB_ZERO_PACKET problem"
+	default n
+	depends on _PRE_PLAT_HCC_USB
+	--help--
+                hcc fixme URB_ZERO_PACKET problem
+
+config CONFIG_TTY_DEV_NAME
+	string "Configure the download tty device name"
+	default "ttyAMA1"
+	depends on WSCFG_BUS_UART
+
+config BT_EM_BUFFER_CALI_SUPPORT
+	bool "BT cali use EM_BUFFER if Enable"
+	default n
+	--help--
+		The memory used by BT cali can be CPURAM or EM_BUFFER, Enable to choose EM_BUFFER.
+
+config _PRE_PLAT_SLP_UART_FORWARD
+	bool "Enable UART forward"
+	default n
+	--help--
+		Need device side support
+
+config CONFIG_DFX_SUPPORT_SYSFS
+	bool "Enable DFX support sysfs"
+	default y
+
+config CONFIG_SDIO_RESCAN
+	bool "Enable SDIO RESCAN"
+	default n
+	depends on WSCFG_BUS_SDIO
+
+menu "Configure the loading path of files such as firmware"
+
+config CONFIG_FIRMWARE_BIN_PATH
+	string "Configure fw bin loading path"
+	default "/etc/tr5330/tr5330.bin" if WSCFG_LINUX
+	default "/jffs0/tr5330.bin" if WSCFG_LITEOS
+
+config CONFIG_FIRMWARE_WIFICALI_PATH
+	string "Configure wifi cali bin loading path"
+	default "/etc/tr5330/wifi_cali.bin" if WSCFG_LINUX
+	default "/jffs0/wifi_cali.bin" if WSCFG_LITEOS
+
+config CONFIG_FIRMWARE_BSLECALI_PATH
+	string "Configure bsle cali bin loading path"
+	default "/etc/tr5330/btc_cali.bin" if WSCFG_LINUX
+	default "/jffs0/btc_cali.bin" if WSCFG_LITEOS
+
+config CONFIG_FIRMWARE_WOW_PATH
+	string "Configure wow bin loading path"
+	default "/etc/tr5330/wow.bin" if WSCFG_LINUX
+	default "/jffs0/wow.bin" if WSCFG_LITEOS
+
+config CONFIG_INI_FILE_PATH
+	string "Configure ini file loading path"
+	default "/etc/tr5330_cfg.ini"
+
+endmenu
+
+config CONFIG_ANDROID_FEATURE
+	bool "Configure Android System"
+	default n
+
+config CONTROLLER_CUSTOMIZATION
+	bool "Enable controller customization"
+	default n

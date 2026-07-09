@@ -1,0 +1,10 @@
+--- wifi/hostif/fhostif_cmd.c
++++ wifi/hostif/fhostif_cmd.c
+@@ -1554,6 +1590,7 @@ const struct ke_msg_handler custom_msg_state[] = {
+     {CUSTOM_MSG_HOST_OTA_REQ,         (ke_msg_func_t)custom_msg_host_ota_handler},
+     {CUSTOM_MSG_HOST_KEEP_ALIVE_REQ,  (ke_msg_func_t)custom_msg_host_keep_alive_handler},
+     {CUSTOM_MSG_HOST_SET_WLAN_IP_REQ, (ke_msg_func_t)custom_msg_host_set_wlan_ip_handler},
++    {CUSTOM_MSG_BLEWIFI_CFG_REQ, (ke_msg_func_t)custom_msg_blewifi_cfg_handler},
+ };
+ 
+ /// Specifies the message handlers that are common to all states.

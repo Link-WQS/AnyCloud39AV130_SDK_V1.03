@@ -1,0 +1,171 @@
+# Abstraction layer
+    net_al/net_al.c
+    net_al/net_tg_al.c
+    net_al/net_iperf_al.c
+# CORE files
+    $NETS_DIR/src/core/init.c
+    $NETS_DIR/src/core/def.c
+    $NETS_DIR/src/core/dns.c
+    $NETS_DIR/src/core/inet_chksum.c
+    $NETS_DIR/src/core/ip.c
+    $NETS_DIR/src/core/mem.c
+    $NETS_DIR/src/core/memp.c
+    $NETS_DIR/src/core/netif.c
+    $NETS_DIR/src/core/pbuf.c
+    $NETS_DIR/src/core/raw.c
+    $NETS_DIR/src/core/stats.c
+    $NETS_DIR/src/core/sys.c
+    $NETS_DIR/src/core/tcp.c
+    $NETS_DIR/src/core/tcp_in.c
+    $NETS_DIR/src/core/tcp_out.c
+    $NETS_DIR/src/core/timeouts.c
+    $NETS_DIR/src/core/udp.c
+
+# CORE4 files
+    $NETS_DIR/src/core/ipv4/autoip.c
+    $NETS_DIR/src/core/ipv4/dhcp.c
+    $NETS_DIR/src/core/ipv4/etharp.c
+    $NETS_DIR/src/core/ipv4/icmp.c
+    $NETS_DIR/src/core/ipv4/igmp.c
+    $NETS_DIR/src/core/ipv4/ip4_frag.c
+    $NETS_DIR/src/core/ipv4/ip4.c
+    $NETS_DIR/src/core/ipv4/ip4_addr.c
+
+# CORE6 files
+    $NETS_DIR/src/core/ipv6/dhcp6.c
+    $NETS_DIR/src/core/ipv6/ethip6.c
+    $NETS_DIR/src/core/ipv6/icmp6.c
+    $NETS_DIR/src/core/ipv6/inet6.c
+    $NETS_DIR/src/core/ipv6/ip6.c
+    $NETS_DIR/src/core/ipv6/ip6_addr.c
+    $NETS_DIR/src/core/ipv6/ip6_frag.c
+    $NETS_DIR/src/core/ipv6/mld6.c
+    $NETS_DIR/src/core/ipv6/nd6.c
+
+# API files: The files which implement the sequential and socket APIs.
+    $NETS_DIR/src/api/api_lib.c
+    $NETS_DIR/src/api/api_msg.c
+    $NETS_DIR/src/api/err.c
+    $NETS_DIR/src/api/netbuf.c
+    $NETS_DIR/src/api/netdb.c
+    $NETS_DIR/src/api/netifapi.c
+    $NETS_DIR/src/api/sockets.c
+    $NETS_DIR/src/api/tcpip.c
+
+# NETIF files: Files implementing various generic network interface functions
+    $NETS_DIR/src/netif/ethernet.c
+    $NETS_DIR/src/netif/slipif.c
+
+# PORT files: The files which implement the OS port.
+    $NETS_DIR/ports/rtos/sys_arch.c
+
+#if (env['SOFTAP'] != 'off')
+# DHCPS
+     dhcps/dhcps.c
+#endif #(env['SOFTAP'] != 'off')
+
+## SIXLOWPAN files: 6LoWPAN
+#    $NETS_DIR/src/netif/lowpan6.c
+#
+## PPP files: PPP
+#    $NETS_DIR/src/netif/ppp/auth.c
+#    $NETS_DIR/src/netif/ppp/ccp.c
+#    $NETS_DIR/src/netif/ppp/chap-md5.c
+#    $NETS_DIR/src/netif/ppp/chap_ms.c
+#    $NETS_DIR/src/netif/ppp/chap-new.c
+#    $NETS_DIR/src/netif/ppp/demand.c
+#    $NETS_DIR/src/netif/ppp/eap.c
+#    $NETS_DIR/src/netif/ppp/ecp.c
+#    $NETS_DIR/src/netif/ppp/eui64.c
+#    $NETS_DIR/src/netif/ppp/fsm.c
+#    $NETS_DIR/src/netif/ppp/ipcp.c
+#    $NETS_DIR/src/netif/ppp/ipv6cp.c
+#    $NETS_DIR/src/netif/ppp/lcp.c
+#    $NETS_DIR/src/netif/ppp/magic.c
+#    $NETS_DIR/src/netif/ppp/mppe.c
+#    $NETS_DIR/src/netif/ppp/multilink.c
+#    $NETS_DIR/src/netif/ppp/ppp.c
+#    $NETS_DIR/src/netif/ppp/pppapi.c
+#    $NETS_DIR/src/netif/ppp/pppcrypt.c
+#    $NETS_DIR/src/netif/ppp/pppoe.c
+#    $NETS_DIR/src/netif/ppp/pppol2tp.c
+#    $NETS_DIR/src/netif/ppp/pppos.c
+#    $NETS_DIR/src/netif/ppp/upap.c
+#    $NETS_DIR/src/netif/ppp/utils.c
+#    $NETS_DIR/src/netif/ppp/vj.c
+#    $NETS_DIR/src/netif/ppp/polarssl/arc4.c
+#    $NETS_DIR/src/netif/ppp/polarssl/des.c
+#    $NETS_DIR/src/netif/ppp/polarssl/md4.c
+#    $NETS_DIR/src/netif/ppp/polarssl/md5.c
+#    $NETS_DIR/src/netif/ppp/polarssl/sha1.c
+#
+## SNMP files: SNMPv2c agent
+#    $NETS_DIR/src/apps/snmp/snmp_asn1.c
+#    $NETS_DIR/src/apps/snmp/snmp_core.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_icmp.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_interfaces.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_ip.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_snmp.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_system.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_tcp.c
+#    $NETS_DIR/src/apps/snmp/snmp_mib2_udp.c
+#    $NETS_DIR/src/apps/snmp/snmp_msg.c
+#    $NETS_DIR/src/apps/snmp/snmpv3.c
+#    $NETS_DIR/src/apps/snmp/snmp_netconn.c
+#    $NETS_DIR/src/apps/snmp/snmp_pbuf_stream.c
+#    $NETS_DIR/src/apps/snmp/snmp_raw.c
+#    $NETS_DIR/src/apps/snmp/snmp_scalar.c
+#    $NETS_DIR/src/apps/snmp/snmp_table.c
+#    $NETS_DIR/src/apps/snmp/snmp_threadsync.c
+#    $NETS_DIR/src/apps/snmp/snmp_traps.c
+#    $NETS_DIR/src/apps/snmp/snmpv3_mbedtls.c
+#    $NETS_DIR/src/apps/snmp/snmpv3_dummy.c
+#
+## HTTPD files: HTTP server
+#    $NETS_DIR/src/apps/httpd/fs.c
+#    $NETS_DIR/src/apps/httpd/httpd.c
+#
+#
+## SNTP files: SNTP client
+#if (env['SNTP'] == 'on')
+    $NETS_DIR/src/apps/sntp/sntp.c
+#endif #(env['SNTP'] == 'on')
+#
+## MDNS files: MDNS responder
+    $NETS_DIR/src/apps/mdns/mdns.c
+#
+## NETBIOSNS files: NetBIOS name server
+#    $NETS_DIR/src/apps/netbiosns/netbiosns.c
+#
+## TFTP files: TFTP server files
+#    $NETS_DIR/src/apps/tftp/tftp_server.c
+#
+## MQTT files: MQTT client files
+#    $NETS_DIR/src/apps/mqtt/mqtt.c
+
+#if (env['MQTT'] != 'off')
+# MQTT files: MQTT client files
+    $NETS_DIR/src/apps/mqttclient/mqttclient/mqttclient.c
+    $NETS_DIR/src/apps/mqttclient/mqtt_common/log/salof.c
+    $NETS_DIR/src/apps/mqttclient/mqtt_common/log/fifo.c
+    $NETS_DIR/src/apps/mqttclient/platform/FreeRTOS/platform_memory.c
+    $NETS_DIR/src/apps/mqttclient/platform/FreeRTOS/platform_mutex.c
+    $NETS_DIR/src/apps/mqttclient/platform/FreeRTOS/platform_timer.c
+    $NETS_DIR/src/apps/mqttclient/mqtt_common/random.c
+    $NETS_DIR/src/apps/mqttclient/mqtt_common/mqtt_list.c
+    $NETS_DIR/src/apps/mqttclient/mqtt_common/log/arch/freertos/arch.c
+    $NETS_DIR/src/apps/mqttclient/mqtt_common/log/format.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTPacket.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTConnectClient.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTUnsubscribeClient.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTFormat.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTSubscribeClient.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTSerializePublish.c
+    $NETS_DIR/src/apps/mqttclient/mqtt/MQTTDeserializePublish.c
+    $NETS_DIR/src/apps/mqttclient/platform/FreeRTOS/platform_thread.c
+    $NETS_DIR/src/apps/mqttclient/network/nettype_tcp.c
+    $NETS_DIR/src/apps/mqttclient/network/nettype_tls.c
+    $NETS_DIR/src/apps/mqttclient/network/network.c
+    $NETS_DIR/src/apps/mqttclient/platform/FreeRTOS/platform_net_socket.c
+#endif #(env['MQTT'] != 'off')

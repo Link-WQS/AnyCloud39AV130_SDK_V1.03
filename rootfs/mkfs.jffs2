@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -eu
+
+if command -v mkfs.jffs2 >/dev/null 2>&1; then
+    exec "$(command -v mkfs.jffs2)" "$@"
+fi
+
+if [ -x "$(dirname "$0")/mkfs.jffs2.i386" ]; then
+    exec "$(dirname "$0")/mkfs.jffs2.i386" "$@"
+fi
+
+echo "mkfs.jffs2 not found in PATH, and bundled fallback is unavailable." >&2
+exit 127

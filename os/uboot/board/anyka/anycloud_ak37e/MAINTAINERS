@@ -1,0 +1,6 @@
+ANYCLOUD_AK37E BOARD
+M:	Fabio Estevam <fabio.estevam@nxp.com>
+S:	Maintained
+F:	board/anyka/anycloud_ak37e/
+F:	include/configs/anycloud_ak37e.h
+F:	configs/anycloud_ak37e_defconfig

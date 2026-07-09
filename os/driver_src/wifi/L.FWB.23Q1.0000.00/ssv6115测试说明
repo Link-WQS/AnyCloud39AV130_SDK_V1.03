@@ -1,0 +1,46 @@
+
+驱动编译步骤：
+1、把驱动压缩包L.FWB.23Q1.0000.00.tar.gz放到SDK根目录os/driver_src/wifi下解压
+
+2、进入目录L.FWB.23Q1.0000.00，打开build.sh，确认内核目录KERNEL_OBJ_PATH和编译工具链PLATFORM_TOOLCHAIN是否正确
+
+3、执行./build.sh编译驱动
+
+4、驱动编译完成后在当前目录下生成目录_av100_install，里面有一个配置文件ssv6x5x-wifi.cfg和wifi驱动ko文件
+
+5、进入tools/ble/ble_app/
+
+6、使用命令编译ble app：make CROSS_COMPILE=arm-anycloud-linux-uclibcgnueabi-，生成ble_app应用程序
+
+7、把以上步骤生成的_av100_install目录下全部文件、ble_app应用程序和wifi固件放到板子上运行即可，如下：
+ssv6x5x-wifi.cfg
+ssv6x5x.ko
+ble_app
+ssv6x5x-sw_nimble.bin
+
+
+驱动加载命令：
+echo 8 > /proc/sys/kernel/printk
+mount -t nfs -o nolock 172.16.10.180:/home/zouyingfu/nfs  mnt/
+modprobe cfg80211
+modprobe mac80211
+modprobe usb-common
+modprobe usbcore
+insmod /usr/modules/ak_hcd.ko
+cd /mnt/ssv6115_test
+insmod ssv6x5x.ko stacfgpath=ssv6x5x-wifi.cfg cfgfirmwarepath=/mnt/ssv6115_test/ 注：cfgfirmwarepath指定wifi配置文件路径，cfgfirmwarepath指定wifi固件路径
+
+连接无线路由并获取ip：
+wpa_supplicant -Dnl80211 -iwlan0 -c /etc/config/wpa_supplicant.conf -B 注：使用此命令前需要修改wpa_supplicant.conf，填写需要连接的路由ssid和password
+route del default
+udhcpc -t 30 -T 1 -i wlan0 -b
+
+
+测试ble：
+运行程序：./ble_app，分别使用以下命令测试ble功能
+
+init=1
+ 
+addservice
+ 
+advert=1,6358nimble

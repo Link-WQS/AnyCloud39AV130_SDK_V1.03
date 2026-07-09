@@ -1,0 +1,11 @@
+#===============================================================================
+# @brief    Kconfig file.
+# Copyright (c) @CompanyNameMagicTag 2023-2023. All rights reserved.
+#===============================================================================
+config ENABLE_BT_SAMPLE
+    bool
+    prompt "Enable the Sample of BT."
+    default n
+    depends on SAMPLE_ENABLE
+    help
+        This option means enable the sample of BT.

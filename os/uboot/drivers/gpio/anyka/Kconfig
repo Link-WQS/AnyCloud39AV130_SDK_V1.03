@@ -1,0 +1,70 @@
+if ARCH_AK37E
+
+config AK37E_GPIO
+	bool "AK37E PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak37e gpio.
+endif
+
+if ARCH_AK3918AV100
+
+config AK3918AV100_GPIO
+	bool "AK3918AV100 PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak3918av100 gpio.
+endif
+
+if ARCH_AK3918EV300L
+
+config AK3918EV300L_GPIO
+	bool "AK3918EV300L PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak3918ev300l gpio.
+endif
+
+if ARCH_AK37D
+
+config AK37D_GPIO
+	bool "AK37D PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak37d gpio.
+endif
+
+
+if ARCH_AK39EV33X
+
+config AK39EV33X_GPIO
+	bool "AK39EV33X PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak39ev33x gpio.
+endif
+
+if ARCH_AK39EV200
+
+config AK39EV200_GPIO
+	bool "AK39EV200 PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak39ev200 gpio.
+endif
+
+if ARCH_AK3918AV130
+
+config AK3918AV130_GPIO
+	bool "AK3918AV130 PIO GPIO driver"
+	depends on DM_GPIO
+	default y
+	help
+		say ye to select ak3918av130 gpio.
+endif

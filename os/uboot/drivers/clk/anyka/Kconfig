@@ -1,0 +1,38 @@
+config CLK_ANYKA_37E
+	bool "Enable clock support on Anycloud37E"
+	help
+	  Enable clock support for Anycloud37E base on SUN4.
+
+config CLK_ANYKA_3918AV100
+	bool "Enable clock support on Anycloud3918av100"
+	help
+	  Enable clock support for Anycloud3918av100 base on h322.
+
+config CLK_ANYKA_3918AV130
+	bool "Enable clock support on Anycloud3918av130"
+	help
+	  Enable clock support for Anycloud3918av130 base on h322LS.
+
+config CLK_ANYKA_KM01A
+	bool "Enable clock support on Anycloudkm01a"
+	help
+	  Enable clock support for Anycloudkm01a base on h322.
+config CLK_ANYKA_3918EV300L
+	bool "Enable clock support on Anycloud3918ev300l"
+	help
+	  Enable clock support for Anycloud3918ev300l base on h322L.
+
+config CLK_ANYKA_37D
+	bool "Enable clock support on Anycloud37D"
+	help
+	  Enable clock support for AnyCloud37D base on h3d.
+
+config CLK_ANYKA_39EV33X
+	bool "Enable clock support on Anycloud39ev33x"
+	help
+	  Enable clock support for Anycloud39ev33x base on h3b.
+
+config CLK_ANYKA_39EV200
+	bool "Enable clock support on Anycloud39ev200"
+	help
+	  Enable clock support for Anycloud39ev200 base on h240.

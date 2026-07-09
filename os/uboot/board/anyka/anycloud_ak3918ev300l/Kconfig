@@ -1,0 +1,15 @@
+if TARGET_ANYCLOUD_AK3918EV300L
+
+config SYS_BOARD
+	default "anycloud_ak3918ev300l"
+
+config SYS_VENDOR
+	default "anyka"
+
+config SYS_SOC
+	default "ak3918ev300l"
+
+config SYS_CONFIG_NAME
+	default "anycloud_ak3918ev300l"
+
+endif

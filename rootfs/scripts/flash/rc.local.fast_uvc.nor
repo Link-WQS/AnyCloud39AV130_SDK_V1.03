@@ -1,0 +1,72 @@
+#!/bin/sh
+
+insmod /usr/modules/ak_efuse.ko
+insmod /usr/modules/ak_leds.ko
+insmod /usr/modules/ak_uio.ko
+insmod /usr/modules/ak_npu.ko
+
+#uvc&uac ko
+modprobe usb-common
+modprobe usbcore
+modprobe udc-core
+insmod /usr/modules/ak_udc.ko
+modprobe configfs
+modprobe libcomposite
+modprobe videobuf2-vmalloc
+modprobe usb_f_uvc
+modprobe usb_f_ak_uac1
+modprobe g_ak_aw
+insmod /usr/modules/ak_pcm.ko
+
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/common/usb-common.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/core/usbcore.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/gadget/udc/udc-core.ko
+# insmod /usr/modules/ak_udc.ko
+# insmod /lib/modules/4.4.282/kernel/fs/configfs/configfs.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/gadget/libcomposite.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/media/v4l2-core/videobuf2-vmalloc.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/gadget/function/usb_f_uvc.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/gadget/function/usb_f_ak_uac1.ko
+# insmod /lib/modules/4.4.282/kernel/drivers/usb/gadget/legacy/g_ak_aw.ko
+# insmod /usr/modules/ak_pcm.ko
+
+# webcam &
+webcam 0 /dev/video8 &
+# ak_fast_aov_sample -v 1 &
+
+
+echo "starting mdev..."
+/bin/echo /sbin/mdev > /proc/sys/kernel/hotplug
+mdev -s
+
+# note: can't recommend running other app before `mount` command.
+
+ifconfig lo 127.0.0.1
+
+#start system service
+
+#print kernel error default
+echo 4 > /proc/sys/kernel/printk
+
+#start syslogd & klogd, log rotated 3 files(200KB) to /var/log/messages
+syslogd -D -n -O /var/log/messages -s 200 -b 3 & # -l prio
+klogd -n & # -c prio
+
+dmesg > /tmp/start_message
+
+## set min free reserve bytes
+echo 2048 > /proc/sys/vm/min_free_kbytes
+
+echo "/tmp/core_%e_%p_%t" > /proc/sys/kernel/core_pattern
+
+#insmod /usr/modules/ak_adc_key.ko
+insmod /usr/modules/ak_rtc.ko
+adjust_base_on_timer=`cat /sys/devices/platform/rtc/ak_rtc/adjust_base_on_timer`
+echo 0 > /sys/devices/platform/rtc/ak_rtc/adjust_base_on_timer
+hwclock -s
+echo $adjust_base_on_timer > /sys/devices/platform/rtc/ak_rtc/adjust_base_on_timer
+
+
+
+
+

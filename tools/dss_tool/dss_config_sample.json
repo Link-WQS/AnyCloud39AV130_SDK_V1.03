@@ -1,0 +1,838 @@
+{
+  // ak_qs_dss_info - 保存到dss.bin的结构体, 此文件只用于示例，因为有注释原因，不可用于dss_config_tool生成dss.bin
+  // 配置版本号
+  "version": 1,
+  // 视频输入配置数组
+  "qs_vi_info": [
+    {
+      // 第一个视频输入设备配置
+      "qs_vi_dev_info": {
+        // video device id - 视频设备ID,与中间件使用方法一致
+        "dev_id": 0,
+        // video device的采集使能 - 视频设备采集使能
+        "enable": 1,
+        // ISP ID, 对应于ISP 分区的哪一个isp conf文件
+        "isp_id": 0,
+        // sensor使用的isp.conf的路径 - sensor使用的ISP配置文件路径,实际会根据isp_info结构体中对应isp_id的isp_path信息传入
+        "isp_path": "/mnt/isp.conf",
+        // global crop. 全局裁剪. -- 相当于qs_videv_info 的crop - 全局裁剪参数
+        "crop": {
+          // x position of crop - 裁剪区域左上角X坐标
+          "left": 0,
+          // y position of crop - 裁剪区域左上角Y坐标
+          "top": 0,
+          // width of crop - 裁剪区域宽度
+          "width": 1920,
+          // height of crop - 裁剪区域高度
+          "height": 1080
+        },
+        // 多目帧采样比例设置. 多目可按不同的比例采样 - 多目帧采样比例设置
+        "frame_rate": 0,
+        // 输出画面是否需要镜像翻转调整. 客户根据实际硬件以及目标效果配置 - 输出画面镜像使能
+        "mirror_en": 0,
+        // 输出画面是否需要上下翻转调整. 客户根据实际硬件以及目标效果配置 - 输出画面上下翻转使能
+        "flip_en": 0,
+        // 3dnr 申请buffer的大小配置 - 3D降噪缓冲区长度配置
+        "isp_3dnr_info": {
+          // 方式1 - 按总长度配置 - 3D降噪总缓冲区长度, 0表示使用默认分配方式，非0值单位是KB
+          "isp_3dnr_total_len": 0,
+          // 方式2 - 按y各长度配置
+          "isp_3dnr_y_len": 0,
+          // 方式2 - 按u各长度配置
+          "isp_3dnr_u_len": 0,
+          // 方式2 - 按v各长度配置
+          "isp_3dnr_v_len": 0
+        },
+        // 当前VI使用ircut group, 与硬件相关. - IRCUT组ID
+        "ircut_group_id": 0,
+        // 当前这路VI选择led group, 与硬件相关. - LED组ID
+        "led_group_id": 0,
+        // 当前这路VI选择lumen group, 与硬件相关. - 光敏传感器组ID
+        "lumen_group_id": 0,
+        // 快速收敛sensor使用的输出窗口选择及相关参数 - 快速AE信息
+        "fastae_info": {
+          // 快速收敛sensor使用的输出窗口选择. 0:大窗(正常输出) 1:小窗(输出窗口较小) - Binning模式
+          "bining_mode": 0,
+          // 快速收敛策略. 0:不使用AE表 1:仅使用软光敏 2:仅使用硬光敏 3:先使用硬光敏,再使用软件快起收敛 - 快速AE模式
+          "fastae_mode": 1,
+          // 快起AE收敛稳定. 通过检查当前亮度与目标亮度实现. 亮度容忍范围 - AE稳定范围
+          "ae_stable_range": 10,
+          // 快起AE收敛最大帧数，超过此帧数则退出
+          "max_run_frames": 0,
+          // T_NIGHT_MODE_LIGHT_SELECT枚举类型. 0: day-night toggle. using irfeed light; 1: day-night toggle. using white light; 2: always day mode with light off; 3: always night mode with light on; 4: always day mode with light on; - 夜间模式灯光选择
+          "night_mode_light_select": 0,
+          // 由于ircut打开与关闭对软光敏测量lumen影响较大, 因此软光敏的day night阈值有两个. 数组标号是测量lumen前ircut的状态. 0:ircut day. 1: ircut night - 昼夜阈值
+          "daynight_threshold": [100, 150],
+          // 快起, 软光敏或硬光敏有两个常规的功能. 1: 判断当前场景是白天或黑夜 2.根据lumen查AE table得到AE值. -1: 使用自身. 0-7: 使用的软光明的id. 8-15: 硬光敏id - 昼夜主控ID
+          "daynight_master_id": -1,
+          // AE table的文件路径. 使用大窗模式的快起一般查表比较快. 查表需要用到AE table表 - AE表文件路径
+          "ae_table_file": ""
+        }
+      },
+      "qs_vi_chn_info": [
+        {
+          // 采集vi dev id - 采集VI dev ID
+          "dev_id": 0,
+          // 采集chn id - 采集通道ID， 与中间件chn_id 使用一致
+          "chn_id": 0,
+          // 是否使能chn采集 - 通道采集使能
+          "enable": 1,
+          // 帧率 - 通道帧率
+          "frame_rate": 15,
+          // 输出分辨率, 宽、高 - 输出分辨率
+          "res": {
+            // 输出宽度 - 宽度
+            "width": 1920,
+            // 输出高度 - 高度
+            "height": 1080
+          },
+          // 完整帧 - buf数量 slice模式 - 片数 - 帧深度，与中间件使用方法一致
+          "frame_depth": 3,
+          // 输出format. VI_DATA_TYPE_YUV420SP = 0, VI_DATA_TYPE_YUV420P, VI_DATA_TYPE_RGB, VI_DATA_TYPE_RAW, VI_DATA_TYPE_RGB_LINEINTL - 数据类型，与中间件使用方法一致
+          "data_type": 0,
+          // VI_CHN_MODE_E枚举类型. 0:FRAME_MODE. 1:SLICE_MODE - 通道模式，与中间件使用方法一致
+          "mode": 1,
+          // 通道裁剪尺寸 - 通道裁剪参数，与中间件使用方法一致
+          "crop": {
+            // x position of crop - 裁剪区域左上角X坐标
+            "left": 0,
+            // y position of crop - 裁剪区域左上角Y坐标
+            "top": 0,
+            // width of crop - 裁剪区域宽度
+            "width": 1920,
+            // height of crop - 裁剪区域高度
+            "height": 1080
+          },
+          // 最大输出分辨率. 申请yuv buffer时, 按此分辨率申请. - 最大输出分辨率，与中间件使用方法一致
+          "max_res": {
+            // 最大输出宽度 - 最大宽度
+            "width": 1920,
+            // 最大输出高度 - 最大高度
+            "height": 1080
+          },
+          // 拼接参数 - 拼接属性
+          "stitch_attr": {
+            // 拼接方式: DISABLE_STITCH_MODE = 0, VERTICAL_STITCH_MODE, HORIZONTAL_STITCH_MODE - 拼接模式
+            "stitch_mode": 1,
+            // 此group拼接的通道id, 不区分主次三通道. - 拼接通道ID， 范围是[CHN_24,CHN_31],与中间件使用方法一致
+            "stitch_chn_id": 24,
+            // 此group拼接的通道总数量 - 拼接通道总数
+            "stitch_num": 2,
+            // 拼接图像内所处的位置，0开始 - 拼接索引
+            "stitch_index": 0,
+            // 拼接后的码流标识，0开始。不区分主次三通道。需要和中间件调用ak_vi_create_stitch_chn的调用顺序一致，第一次调用API的global_id值是0
+            "stitch_global_id": 0
+          },
+          // NPU属性
+          "npu_attr": {
+            // NPU使能
+            "npu_enable": 0,
+            // NPU通道ID数组
+            "npu_chn_id": [0, 0, 0, 0]
+          }
+        },
+        {
+          // 采集vi id - 采集VI ID
+          "dev_id": 0,
+          // 采集chn id - 采集通道ID
+          "chn_id": 1,
+          // 是否使能chn采集 - 通道采集使能
+          "enable": 1,
+          // 帧率 - 通道帧率
+          "frame_rate": 0,
+          // 输出分辨率, 宽、高 - 输出分辨率
+          "res": {
+            // 输出宽度 - 宽度
+            "width": 640,
+            // 输出高度 - 高度
+            "height": 360
+          },
+          // 完整帧 - buf数量 slice模式 - 片数 - 帧深度
+          "frame_depth": 2,
+          // 输出format. VI_DATA_TYPE_YUV420SP = 0, VI_DATA_TYPE_YUV420P, VI_DATA_TYPE_RGB, VI_DATA_TYPE_RAW, VI_DATA_TYPE_RGB_LINEINTL - 数据类型
+          "data_type": 0,
+          // VI_CHN_MODE_E枚举类型. 0:FRAME_MODE. 1:SLICE_MODE - 通道模式
+          "mode": 0,
+          // 通道裁剪尺寸 - 通道裁剪参数
+          "crop": {
+            // x position of crop - 裁剪区域左上角X坐标
+            "left": 0,
+            // y position of crop - 裁剪区域左上角Y坐标
+            "top": 0,
+            // width of crop - 裁剪区域宽度
+            "width": 1920,
+            // height of crop - 裁剪区域高度
+            "height": 1080
+          },
+          // 最大输出分辨率. 申请yuv buffer时, 按此分辨率申请. - 最大输出分辨率
+          "max_res": {
+            // 最大输出宽度 - 最大宽度
+            "width": 640,
+            // 最大输出高度 - 最大高度
+            "height": 360
+          },
+          // 拼接参数 - 拼接属性
+          "stitch_attr": {
+            // 拼接方式: DISABLE_STITCH_MODE = 0, VERTICAL_STITCH_MODE, HORIZONTAL_STITCH_MODE - 拼接模式
+            "stitch_mode": 1,
+            // 此group拼接的通道id, 不区分主次三通道. - 拼接通道ID， 范围是[CHN_24,CHN_31],与中间件使用方法一致
+            "stitch_chn_id": 25,
+            // 此group拼接的通道总数量 - 拼接通道总数
+            "stitch_num": 2,
+            // 拼接图像内所处的位置，0开始 - 拼接索引
+            "stitch_index": 0,
+            // 拼接后的码流标识，0开始。不区分主次三通道。应用自行定义 - 全局ID
+            "stitch_global_id": 1
+          },
+          // NPU属性
+          "npu_attr": {
+            // NPU使能
+            "npu_enable": 0,
+            // NPU通道ID数组
+            "npu_chn_id": [0, 0, 0, 0]
+          }
+        },
+        {
+          // 采集vi id - 采集VI ID
+          "dev_id": 0,
+          // 采集chn id - 采集通道ID
+          "chn_id": 16,
+          // 是否使能chn采集 - 通道采集使能
+          "enable": 0,
+          // 帧率 - 通道帧率
+          "frame_rate": 0,
+          // 输出分辨率, 宽、高 - 输出分辨率
+          "res": {
+            // 输出宽度 - 宽度
+            "width": 320,
+            // 输出高度 - 高度
+            "height": 180
+          },
+          // 完整帧 - buf数量 slice模式 - 片数 - 帧深度
+          "frame_depth": 1,
+          // 输出format. VI_DATA_TYPE_YUV420SP = 0, VI_DATA_TYPE_YUV420P, VI_DATA_TYPE_RGB, VI_DATA_TYPE_RAW, VI_DATA_TYPE_RGB_LINEINTL - 数据类型
+          "data_type": 4,
+          // VI_CHN_MODE_E枚举类型. 0:FRAME_MODE. 1:SLICE_MODE - 通道模式
+          "mode": 0,
+          // 通道裁剪尺寸 - 通道裁剪参数
+          "crop": {
+            // x position of crop - 裁剪区域左上角X坐标
+            "left": 0,
+            // y position of crop - 裁剪区域左上角Y坐标
+            "top": 0,
+            // width of crop - 裁剪区域宽度
+            "width": 1920,
+            // height of crop - 裁剪区域高度
+            "height": 1080
+          },
+          // 最大输出分辨率. 申请yuv buffer时, 按此分辨率申请. - 最大输出分辨率
+          "max_res": {
+            // 最大输出宽度 - 最大宽度
+            "width": 320,
+            // 最大输出高度 - 最大高度
+            "height": 180
+          },
+          // 拼接参数 - 拼接属性
+          "stitch_attr": {
+            // 拼接方式: DISABLE_STITCH_MODE = 0, VERTICAL_STITCH_MODE, HORIZONTAL_STITCH_MODE - 拼接模式
+            "stitch_mode": 0,
+            // 此group拼接的通道id, 不区分主次三通道. - 拼接通道ID， 范围是[CHN_24,CHN_31],与中间件使用方法一致
+            "stitch_chn_id": 0,
+            // 此group拼接的通道总数量 - 拼接通道总数
+            "stitch_num": 0,
+            // 拼接图像内所处的位置，0开始 - 拼接索引
+            "stitch_index": 0,
+            // 拼接后的码流标识，0开始。不区分主次三通道。应用自行定义 - 全局ID
+            "stitch_global_id": 0
+          },
+          // NPU属性
+          "npu_attr": {
+            // NPU使能
+            "npu_enable": 0,
+            // NPU通道ID数组
+            "npu_chn_id": [0, 0, 0, 0]
+          }
+        }
+      ]
+    },
+    {
+      // 第二个视频输入设备配置
+      "qs_vi_dev_info": {
+        // video device id - 视频设备ID
+        "dev_id": 1,
+        // video device的采集使能 - 视频设备采集使能
+        "enable": 1,
+        // ISP ID
+        "isp_id": 0,
+        // sensor使用的isp.conf的路径 - sensor使用的ISP配置文件路径,实际会根据isp_info结构体中对应isp_id的isp_path信息传入
+        "isp_path": "/mnt/isp.conf",
+        // global crop. 全局裁剪. -- 相当于qs_videv_info 的crop - 全局裁剪参数
+        "crop": {
+          // x position of crop - 裁剪区域左上角X坐标
+          "left": 0,
+          // y position of crop - 裁剪区域左上角Y坐标
+          "top": 0,
+          // width of crop - 裁剪区域宽度
+          "width": 1920,
+          // height of crop - 裁剪区域高度
+          "height": 1080
+        },
+        // 多目帧采样比例设置. 多目可按不同的比例采样 - 多目帧采样比例设置
+        "frame_rate": 15,
+        // 输出画面是否需要镜像翻转调整. 客户根据实际硬件以及目标效果配置 - 输出画面镜像使能
+        "mirror_en": 0,
+        // 输出画面是否需要上下翻转调整. 客户根据实际硬件以及目标效果配置 - 输出画面上下翻转使能
+        "flip_en": 0,
+        // 3dnr 申请buffer的大小配置 - 3D降噪缓冲区长度配置
+        "isp_3dnr_info": {
+          // 方式1 - 按总长度配置 - 3D降噪总缓冲区长度, 0表示使用默认分配方式，非0值单位是KB
+          "isp_3dnr_total_len": 0,
+          // 方式2 - 按y各长度配置
+          "isp_3dnr_y_len": 0,
+          // 方式2 - 按u各长度配置
+          "isp_3dnr_u_len": 0,
+          // 方式2 - 按v各长度配置
+          "isp_3dnr_v_len": 0
+        },
+        // 当前VI使用ircut group, 与硬件相关. - IRCUT组ID
+        "ircut_group_id": 0,
+        // 当前这路VI选择led group, 与硬件相关. - LED组ID
+        "led_group_id": 0,
+        // 当前这路VI选择lumen group, 与硬件相关. - 光敏传感器组ID
+        "lumen_group_id": 0,
+        // 快速收敛sensor使用的输出窗口选择及相关参数 - 快速AE信息
+        "fastae_info": {
+          // 快速收敛sensor使用的输出窗口选择. 0:大窗(正常输出) 1:小窗(输出窗口较小) - Binning模式
+          "bining_mode": 0,
+          // 快速收敛策略. 0:不使用AE表 1:仅使用软光敏 2:仅使用硬光敏 3:先使用硬光敏,再使用软件快起收敛 - 快速AE模式
+          "fastae_mode": 0,
+          // 快起AE收敛稳定. 通过检查当前亮度与目标亮度实现. 亮度容忍范围 - AE稳定范围
+          "ae_stable_range": 0,
+          // 快起AE收敛最大帧数，超过此帧数则退出
+          "max_run_frames": 0,
+          // T_NIGHT_MODE_LIGHT_SELECT枚举类型. 0: day-night toggle. using irfeed light; 1: day-night toggle. using white light; 2: always day mode with light off; 3: always night mode with light on; 4: always day mode with light on; - 夜间模式灯光选择
+          "night_mode_light_select": 0,
+          // 由于ircut打开与关闭对软光敏测量lumen影响较大, 因此软光敏的day night阈值有两个. 数组标号是测量lumen前ircut的状态. 0:ircut day. 1: ircut night - 昼夜阈值
+          "daynight_threshold": [0, 0],
+          // 快起, 软光敏或硬光敏有两个常规的功能. 1: 判断当前场景是白天或黑夜 2.根据lumen查AE table得到AE值. -1: 使用自身. 0-7: 使用的软光明的id. 8-15: 硬光敏id - 昼夜主控ID
+          "daynight_master_id": 0,
+          // AE table的文件路径. 使用大窗模式的快起一般查表比较快. 查表需要用到AE table表 - AE表文件路径
+          "ae_table_file": ""
+        }
+      },
+      "qs_vi_chn_info": [
+        {
+          // 采集vi id - 采集VI ID
+          "dev_id": 1,
+          // 采集chn id - 采集通道ID
+          "chn_id": 2,
+          // 是否使能chn采集 - 通道采集使能
+          "enable": 1,
+          // 帧率 - 通道帧率
+          "frame_rate": 15,
+          // 输出分辨率, 宽、高 - 输出分辨率
+          "res": {
+            // 输出宽度 - 宽度
+            "width": 1920,
+            // 输出高度 - 高度
+            "height": 1080
+          },
+          // 完整帧 - buf数量 slice模式 - 片数 - 帧深度
+          "frame_depth": 3,
+          // 输出format. VI_DATA_TYPE_YUV420SP = 0, VI_DATA_TYPE_YUV420P, VI_DATA_TYPE_RGB, VI_DATA_TYPE_RAW, VI_DATA_TYPE_RGB_LINEINTL - 数据类型
+          "data_type": 0,
+          // VI_CHN_MODE_E枚举类型. 0:FRAME_MODE. 1:SLICE_MODE - 通道模式
+          "mode": 1,
+          // 通道裁剪尺寸 - 通道裁剪参数
+          "crop": {
+            // x position of crop - 裁剪区域左上角X坐标
+            "left": 0,
+            // y position of crop - 裁剪区域左上角Y坐标
+            "top": 0,
+            // width of crop - 裁剪区域宽度
+            "width": 1920,
+            // height of crop - 裁剪区域高度
+            "height": 1080
+          },
+          // 最大输出分辨率. 申请yuv buffer时, 按此分辨率申请. - 最大输出分辨率
+          "max_res": {
+            // 最大输出宽度 - 最大宽度
+            "width": 1920,
+            // 最大输出高度 - 最大高度
+            "height": 1080
+          },
+          // 拼接参数 - 拼接属性
+          "stitch_attr": {
+            // 拼接方式: DISABLE_STITCH_MODE = 0, VERTICAL_STITCH_MODE, HORIZONTAL_STITCH_MODE - 拼接模式
+            "stitch_mode": 1,
+            // 此group拼接的通道id, 不区分主次三通道. - 拼接通道ID， 范围是[CHN_24,CHN_31],与中间件使用方法一致
+            "stitch_chn_id": 24,
+            // 此group拼接的通道总数量 - 拼接通道总数
+            "stitch_num": 2,
+            // 拼接图像内所处的位置，0开始 - 拼接索引
+            "stitch_index": 1,
+            // 拼接后的码流标识，0开始。不区分主次三通道。应用自行定义 - 全局ID
+            "stitch_global_id": 0
+          },
+          // NPU属性
+          "npu_attr": {
+            // NPU使能
+            "npu_enable": 0,
+            // NPU通道ID数组
+            "npu_chn_id": [0, 0, 0, 0]
+          }
+        },
+        {
+          // 采集vi id - 采集VI ID
+          "dev_id": 1,
+          // 采集chn id - 采集通道ID
+          "chn_id": 3,
+          // 是否使能chn采集 - 通道采集使能
+          "enable": 1,
+          // 帧率 - 通道帧率
+          "frame_rate": 0,
+          // 输出分辨率, 宽、高 - 输出分辨率
+          "res": {
+            // 输出宽度 - 宽度
+            "width": 640,
+            // 输出高度 - 高度
+            "height": 360
+          },
+          // 完整帧 - buf数量 slice模式 - 片数 - 帧深度
+          "frame_depth": 2,
+          // 输出format. VI_DATA_TYPE_YUV420SP = 0, VI_DATA_TYPE_YUV420P, VI_DATA_TYPE_RGB, VI_DATA_TYPE_RAW, VI_DATA_TYPE_RGB_LINEINTL - 数据类型
+          "data_type": 0,
+          // VI_CHN_MODE_E枚举类型. 0:FRAME_MODE. 1:SLICE_MODE - 通道模式
+          "mode": 0,
+          // 通道裁剪尺寸 - 通道裁剪参数
+          "crop": {
+            // x position of crop - 裁剪区域左上角X坐标
+            "left": 0,
+            // y position of crop - 裁剪区域左上角Y坐标
+            "top": 0,
+            // width of crop - 裁剪区域宽度
+            "width": 1920,
+            // height of crop - 裁剪区域高度
+            "height": 1080
+          },
+          // 最大输出分辨率. 申请yuv buffer时, 按此分辨率申请. - 最大输出分辨率
+          "max_res": {
+            // 最大输出宽度 - 最大宽度
+            "width": 640,
+            // 最大输出高度 - 最大高度
+            "height": 360
+          },
+          // 拼接参数 - 拼接属性
+          "stitch_attr": {
+            // 拼接方式: DISABLE_STITCH_MODE = 0, VERTICAL_STITCH_MODE, HORIZONTAL_STITCH_MODE - 拼接模式
+            "stitch_mode": 1,
+            // 此group拼接的通道id, 不区分主次三通道. - 拼接通道ID， 范围是[CHN_24,CHN_31],与中间件使用方法一致
+            "stitch_chn_id": 25,
+            // 此group拼接的通道总数量 - 拼接通道总数
+            "stitch_num": 2,
+            // 拼接图像内所处的位置，0开始 - 拼接索引
+            "stitch_index": 1,
+            // 拼接后的码流标识，0开始。不区分主次三通道。应用自行定义 - 全局ID
+            "stitch_global_id": 1
+          },
+          // NPU属性
+          "npu_attr": {
+            // NPU使能
+            "npu_enable": 0,
+            // NPU通道ID数组
+            "npu_chn_id": [0, 0, 0, 0]
+          }
+        },
+        {
+          // 采集vi id - 采集VI ID
+          "dev_id": 1,
+          // 采集chn id - 采集通道ID
+          "chn_id": 17,
+          // 是否使能chn采集 - 通道采集使能
+          "enable": 0,
+          // 帧率 - 通道帧率
+          "frame_rate": 0,
+          // 输出分辨率, 宽、高 - 输出分辨率
+          "res": {
+            // 输出宽度 - 宽度
+            "width": 320,
+            // 输出高度 - 高度
+            "height": 180
+          },
+          // 完整帧 - buf数量 slice模式 - 片数 - 帧深度
+          "frame_depth": 1,
+          // 输出format. VI_DATA_TYPE_YUV420SP = 0, VI_DATA_TYPE_YUV420P, VI_DATA_TYPE_RGB, VI_DATA_TYPE_RAW, VI_DATA_TYPE_RGB_LINEINTL - 数据类型
+          "data_type": 4,
+          // VI_CHN_MODE_E枚举类型. 0:FRAME_MODE. 1:SLICE_MODE - 通道模式
+          "mode": 0,
+          // 通道裁剪尺寸 - 通道裁剪参数
+          "crop": {
+            // x position of crop - 裁剪区域左上角X坐标
+            "left": 0,
+            // y position of crop - 裁剪区域左上角Y坐标
+            "top": 0,
+            // width of crop - 裁剪区域宽度
+            "width": 1920,
+            // height of crop - 裁剪区域高度
+            "height": 1080
+          },
+          // 最大输出分辨率. 申请yuv buffer时, 按此分辨率申请. - 最大输出分辨率
+          "max_res": {
+            // 最大输出宽度 - 最大宽度
+            "width": 320,
+            // 最大输出高度 - 最大高度
+            "height": 180
+          },
+          // 拼接参数 - 拼接属性
+          "stitch_attr": {
+            // 拼接方式: DISABLE_STITCH_MODE = 0, VERTICAL_STITCH_MODE, HORIZONTAL_STITCH_MODE - 拼接模式
+            "stitch_mode": 0,
+            // 此group拼接的通道id, 不区分主次三通道. - 拼接通道ID， 范围是[CHN_24,CHN_31],与中间件使用方法一致
+            "stitch_chn_id": 0,
+            "stitch_num": 0,
+            // 拼接图像内所处的位置，0开始 - 拼接索引
+            "stitch_index": 0,
+            // 拼接后的码流标识，0开始。不区分主次三通道。应用自行定义 - 全局ID
+            "stitch_global_id": 0
+          },
+          // NPU属性
+          "npu_attr": {
+            // NPU使能
+            "npu_enable": 0,
+            // NPU通道ID数组
+            "npu_chn_id": [0, 0, 0, 0]
+          }
+        }
+      ]
+    }
+  ],
+  // 编码器参数配置数组，包含3个编码器实例,与中间件使用方法一致
+  "qs_venc_info": [
+    {
+      // 编码器通道id - 编码器ID
+      "venc_id": 0,
+      // 编码宽度 - 编码宽度
+      "width": 1920,
+      // 编码高度 - 编码高度
+      "height": 2160,
+      // 帧率 - 帧率
+      "fps": 15,
+      // GOP长度 - GOP长度
+      "goplen": 30,
+      // 目标码率(kbps) - 目标码率
+      "target_kbps": 2000,
+      // 最大码率(kbps) - 最大码率
+      "max_kbps": 2000,
+      // 编码profile - 编码profile
+      "profile": 0,
+      // 码率控制模式 - 码率控制模式
+      "br_mode": 4,
+      // 初始QP值，推荐动态码率参数[0,100] - 初始QP值
+      "initqp": 90,
+      // 最小QP值，推荐动态码率参数[20,25] - 最小QP值
+      "minqp": 20,
+      // 最大QP值，推荐动态码率参数[45,50] - 最大QP值
+      "maxqp": 42,
+      // JPEG质量等级 - JPEG质量等级
+      "jpeg_qlevel": 0,
+      // 色度模式 - 色度模式
+      "chroma_mode": 0,
+      // 编码输出类型，h264或jpeg或h265 - 编码输出类型
+      "enc_out_type": 0,
+      // 最大图片大小 - 最大图片大小
+      "max_picture_size": 0,
+      // 编码级别 - 编码级别
+      "enc_level": 0,
+      // 智能编码模式，0:禁用，1:LTR模式，2:改变GOP长度模式 - 智能编码模式
+      "smart_mode": 0,
+      // 智能GOP长度 - 智能GOP长度
+      "smart_goplen": 0,
+      // 智能质量 - 智能质量
+      "smart_quality": 0,
+      // 智能静态值 - 智能静态值
+      "smart_static_value": 0,
+      // GDR模式 - GDR模式
+      "gdr_mode": 0,
+      // 最大帧大小 - 最大帧大小
+      "max_frame_size": 0
+    },
+    {
+      // 编码器通道id - 编码器ID
+      "venc_id": 1,
+      // 编码宽度 - 编码宽度
+      "width": 640,
+      // 编码高度 - 编码高度
+      "height": 720,
+      // 帧率 - 帧率
+      "fps": 15,
+      // GOP长度 - GOP长度
+      "goplen": 30,
+      // 目标码率(kbps) - 目标码率
+      "target_kbps": 200,
+      // 最大码率(kbps) - 最大码率
+      "max_kbps": 200,
+      // 编码profile - 编码profile
+      "profile": 0,
+      // 码率控制模式 - 码率控制模式
+      "br_mode": 4,
+      // 初始QP值，推荐动态码率参数[0,100] - 初始QP值
+      "initqp": 90,
+      // 最小QP值，推荐动态码率参数[20,25] - 最小QP值
+      "minqp": 20,
+      // 最大QP值，推荐动态码率参数[45,50] - 最大QP值
+      "maxqp": 42,
+      // JPEG质量等级 - JPEG质量等级
+      "jpeg_qlevel": 0,
+      // 色度模式 - 色度模式
+      "chroma_mode": 0,
+      // 编码输出类型，h264或jpeg或h265 - 编码输出类型
+      "enc_out_type": 0,
+      // 最大图片大小 - 最大图片大小
+      "max_picture_size": 0,
+      // 编码级别 - 编码级别
+      "enc_level": 0,
+      // 智能编码模式，0:禁用，1:LTR模式，2:改变GOP长度模式 - 智能编码模式
+      "smart_mode": 0,
+      // 智能GOP长度 - 智能GOP长度
+      "smart_goplen": 0,
+      // 智能质量 - 智能质量
+      "smart_quality": 0,
+      // 智能静态值 - 智能静态值
+      "smart_static_value": 0,
+      // GDR模式 - GDR模式
+      "gdr_mode": 0,
+      // 最大帧大小 - 最大帧大小
+      "max_frame_size": 0
+    },
+    {
+      // 编码器通道id - 编码器ID
+      "venc_id": 2,
+      // 编码宽度 - 编码宽度
+      "width": 640,
+      // 编码高度 - 编码高度
+      "height": 720,
+      // 帧率 - 帧率
+      "fps": 1,
+      // GOP长度 - GOP长度
+      "goplen": 1,
+      // 目标码率(kbps) - 目标码率
+      "target_kbps": 200,
+      // 最大码率(kbps) - 最大码率
+      "max_kbps": 200,
+      // 编码profile - 编码profile
+      "profile": 0,
+      // 码率控制模式 - 码率控制模式
+      "br_mode": 4,
+      // 初始QP值，推荐动态码率参数[0,100] - 初始QP值
+      "initqp": 90,
+      // 最小QP值，推荐动态码率参数[20,25] - 最小QP值
+      "minqp": 20,
+      // 最大QP值，推荐动态码率参数[45,50] - 最大QP值
+      "maxqp": 42,
+      // JPEG质量等级 - JPEG质量等级
+      "jpeg_qlevel": 0,
+      // 色度模式 - 色度模式
+      "chroma_mode": 0,
+      // 编码输出类型，h264或jpeg或h265 - 编码输出类型
+      "enc_out_type": 1,
+      // 最大图片大小 - 最大图片大小
+      "max_picture_size": 0,
+      // 编码级别 - 编码级别
+      "enc_level": 30,
+      // 智能编码模式，0:禁用，1:LTR模式，2:改变GOP长度模式 - 智能编码模式
+      "smart_mode": 0,
+      // 智能GOP长度 - 智能GOP长度
+      "smart_goplen": 0,
+      // 智能质量 - 智能质量
+      "smart_quality": 0,
+      // 智能静态值 - 智能静态值
+      "smart_static_value": 0,
+      // GDR模式 - GDR模式
+      "gdr_mode": 0,
+      // 最大帧大小 - 最大帧大小
+      "max_frame_size": 0
+    }
+  ],
+  // vi采集与venc绑定的配置数组，包含3个视频实例
+  "qs_video_info": [
+    {
+      // 通道ID - 通道ID,示例为主通道的拼接通道id
+      "chn_id": 24,
+      // 编码器通道id - 编码器ID
+      "venc_id": 0,
+      // 编码器帧率。与编码器初始化申请buffer大小有关 - 编码器帧率
+      "frame_rate": 0,
+      // 编码器缓存? 与编码器初始化申请buffer大小有关 - 帧深度
+      "frame_depth": 200,
+      // 编码模式: 0:user mode; 1:kernel mode - 编码模式
+      "venc_encode_mode": 1
+    },
+    {
+      // 通道ID - 通道ID
+      "chn_id": 25,
+      // 编码器通道id - 编码器ID
+      "venc_id": 1,
+      // 编码器帧率。与编码器初始化申请buffer大小有关 - 编码器帧率
+      "frame_rate": 0,
+      // 编码器缓存? 与编码器初始化申请buffer大小有关 - 帧深度
+      "frame_depth": 200,
+      // 编码模式: 0:user mode; 1:kernel mode - 编码模式
+      "venc_encode_mode": 1
+    },
+    {
+      // 通道ID - 通道ID
+      "chn_id": 25,
+      // 编码器通道id - 编码器ID
+      "venc_id": 2,
+      // 编码器帧率。与编码器初始化申请buffer大小有关 - 编码器帧率
+      "frame_rate": 1,
+      // 编码器缓存? 与编码器初始化申请buffer大小有关 - 帧深度
+      "frame_depth": 1,
+      // 编码模式: 0:user mode; 1:kernel mode - 编码模式
+      "venc_encode_mode": 1
+    }
+  ],
+  // ISP信息配置数组，包含2个ISP实例
+  "isp_info": [
+    {
+      // ISP ID, 对应于ISP 分区的哪一个isp conf文件
+      "isp_id": 0,
+      // ISP配置文件路径，快启流程会把ISP分区的对应的isp_id的isp conf保存到isp_path指定的路径中。
+      "isp_path": "/tmp/isp_conf_0.conf"
+    },
+    {
+      // ISP ID, 对应于ISP 分区的哪一个isp conf文件
+      "isp_id": 1,
+      // ISP配置文件路径，快启流程会把ISP分区的对应的isp_id的isp conf保存到isp_path指定的路径中。
+      "isp_path": "/tmp/isp_conf_1.conf"
+    }
+  ],
+  // ircut 硬件参数数组，包含1个IRCUT实例
+  "ircut": [
+    {
+      // 接ircut的gpio - IRCUT A GPIO配置
+      "ircut_a_gpio": {
+        // gpio pin num - GPIO引脚号
+        "nb": 0,
+        // example:pin settings when turning on the light - GPIO值
+        "value": 0
+      },
+      // 双线ircut的第2个gpio. 单线ircut请设置ircut_b_gpio.nb = -1; - IRCUT B GPIO配置
+      "ircut_b_gpio": {
+        // gpio pin num - GPIO引脚号
+        "nb": 0,
+        // example:pin settings when turning on the light - GPIO值
+        "value": 0
+      }
+    }
+  ],
+  // 补光灯的硬件参数数组，包含1个LED实例
+  "led": [
+    {
+      // 红外补光灯的方式. 0-gpio 1-pwm - 红外补光灯控制方式
+      "ircut_led_type": 0,
+      // gpio控制的红外补光灯 - 红外补光灯GPIO配置
+      "irled_gpio": {
+        // gpio pin num - GPIO引脚号
+        "nb": 0,
+        // example:pin settings when turning on the light - GPIO值
+        "value": 0
+      },
+      // 白光补光灯的方式. 0-gpio 1-pwm - 白光补光灯控制方式
+      "whiteled_type": 0,
+      // gpio控制的白光补光灯 - 白光补光灯GPIO配置
+      "whiteled_gpio": {
+        // gpio pin num - GPIO引脚号
+        "nb": 0,
+        // example:pin settings when turning on the light - GPIO值
+        "value": 0
+      }
+    }
+  ],
+  // 硬光敏数据结构数组，包含2个传感器实例
+  "hw_lumi_sensor": [
+    {
+      // AIN id - 0 or 1 - AIN索引
+      "ain_index": 0,
+      // 白天黑夜阈值. 单位与adc的值相同, adc的值没计算转换为阻值 - 昼夜阈值
+      "daynight_threshold": 0
+    },
+    {
+      // AIN id - 0 or 1 - AIN索引
+      "ain_index": 0,
+      // 白天黑夜阈值. 单位与adc的值相同, adc的值没计算转换为阻值 - 昼夜阈值
+      "daynight_threshold": 0
+    }
+  ],
+  // 音频配置信息
+  "audio_info": {
+    // 音频输入信息
+    "ai_info": {
+      // 音频输入ID， -1表示不启用快启ai功能。
+      "id": -1,
+      // 采样率
+      "sample_rate": 8000,
+      // 声道数
+      "channels": 1,
+      // 采样位数
+      "sample_bits": 16,
+      // 周期字节数
+      "period_bytes": 1024,
+      // 周期数
+      "periods": 16,
+      // 设备类型
+      "dev_type": 0,
+      // 增益
+      "gain": 5,
+      // 数据类型
+      "data_type": 0,
+      // 保留字段
+      "reserved": 0
+    },
+    // 音频输出信息
+    "ao_info": {
+      // 音频输出ID, -1表示不启用快启ao功能。
+      "id": -1,
+      // 采样率
+      "sample_rate": 8000,
+      // 声道数
+      "channels": 1,
+      // 采样位数
+      "sample_bits": 16,
+      // 周期字节数
+      "period_bytes": 1024,
+      // 周期数
+      "periods": 16,
+      // 设备类型
+      "dev_type": 0,
+      // 增益
+      "gain": 4,
+      // 数据类型
+      "data_type": 0,
+      // 数据来源
+      "data_src": 0,
+      // 音频文件路径
+      "file_path": "/tmp/1.pcm",
+      // 保留字段
+      "reserved": 0
+    }
+  },
+  // NPU配置数组
+  "npu_info": [
+    {
+      // 通道ID
+      "chn_id": 0,
+      // 模型类型
+      "model_type": 0,
+      // 模型文件路径
+      "model_path": "/tmp/model_0x0A00000000.bin"
+    }
+  ],
+  // 小核参数
+  "little_core_info": {
+    // 板级配置名称
+    "board_name": "",
+    // 保留字段
+    "reserved": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+}

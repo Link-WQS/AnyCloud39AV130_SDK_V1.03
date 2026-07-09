@@ -1,0 +1,62 @@
+Index: Makefile
+===================================================================
+--- Makefile	(revision 1558)
++++ Makefile	(working copy)
+@@ -34,7 +34,7 @@
+ platform ?=PLATFORM_SUN6I
+ #Android
+ #Linux
+-sys ?= linux
++sys ?= Android
+ #arch:arm or arm64 or mips(NVT98517)
+ arch ?= arm
+ #export 
+Index: Makefile.build
+===================================================================
+--- Makefile.build	(revision 1558)
++++ Makefile.build	(working copy)
+@@ -25,25 +25,25 @@
+ CONFIG_ARES=n
+ CONFIG_ARESB=y
+ CONFIG_HERA=n
+-USB_BUS=y
++USB_BUS=n
+ SPI_BUS=n
+-SDIO_BUS=n
++SDIO_BUS=y
+ TX_NO_CONFIRM=n
+ MULT_NAME=n
+ ATBM_MAKEFILE_SUB=y
+ 
+ LOAD_FW_H=n
+-SKB_DEBUG=y
+-MEM_DEBUG=y
++SKB_DEBUG=n
++MEM_DEBUG=n
+ BRIDGE=n
+ MONITOR=y
+ EARLYSUSPEND=n
+ CH5G=n
+-USBAGGTX=y
++USBAGGTX=n
+ NOTXCONFIRM=y
+-USBDMABUFF=y
+-USBCMDENHANCE=y
+-USBDATAENHANCE=y
++USBDMABUFF=n
++USBCMDENHANCE=n
++USBDATAENHANCE=n
+ PMRELODDFW=n
+ CHECKSUM=n
+ CONFIG_NOT_SUPPORT_40M_CHW=n
+Index: atbm_kconf/mconf
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: hal_apollo/svn_version.h
+===================================================================
+--- hal_apollo/svn_version.h	(revision 1558)
++++ hal_apollo/svn_version.h	(working copy)
+@@ -1 +1 @@
+-#define DRIVER_VER  1497
++#define DRIVER_VER  1547

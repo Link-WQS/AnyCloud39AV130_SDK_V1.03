@@ -1,0 +1,35 @@
+/*
+ * Simple U-Boot uImage source file containing a single kernel and FDT blob
+ */
+
+/dts-v1/;
+
+/ {
+	description = "Simple image with single Linux kernel and FDT blob";
+	#address-cells = <1>;
+
+	images {
+		kernel {
+			description = "anyka Linux kernel";
+			data = /incbin/("../burntool/uImage");
+			type = "kernel";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			load = <0x80008000>;
+			entry = <0x80008040>;
+			signature {
+				algo = "sha256,rsa2048";
+				key-name-hint = "dev";
+			};
+		};
+	};
+
+	configurations {
+		default = "conf";
+		conf {
+			description = "Boot Linux kernel with FDT blob";
+			kernel = "kernel";
+		};
+	};
+};

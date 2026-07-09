@@ -1,0 +1,15 @@
+if TARGET_ANYCLOUD_KM01A
+
+config SYS_BOARD
+	default "anycloud_km01a"
+
+config SYS_VENDOR
+	default "anyka"
+
+config SYS_SOC
+	default "km01a"
+
+config SYS_CONFIG_NAME
+	default "anycloud_km01a"
+
+endif

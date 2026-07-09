@@ -1,0 +1,13 @@
+--- wifi/LinuxDriver/aic8800_netdrv/Makefile
++++ wifi/LinuxDriver/aic8800_netdrv/Makefile
+@@ -27,8 +28,8 @@ CONFIG_APP_FASYNC ?= n
+ # Set thread priority
+ CONFIG_TXRX_THREAD_PRIO = y
+ 
+-CONFIG_USB_SUPPORT   = y
+-CONFIG_SDIO_SUPPORT  = n
++CONFIG_USB_SUPPORT   = n
++CONFIG_SDIO_SUPPORT  = y
+ CONFIG_RX_REORDER   ?= y
+ CONFIG_SDIO_PWRCTRL ?= n
+ ifeq ($(CONFIG_VNET_MODE), y)

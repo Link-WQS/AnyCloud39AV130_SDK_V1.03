@@ -1,0 +1,185 @@
+// SPDX-License-Identifier: GPL-2.0+
+/**
+ * @brief Anyka37E SoC device tree source
+ * 
+ */
+
+#include <dt-bindings/clock/ak3918av130-clock.h>
+/ {
+    compatible = "anyka,ak3918av130";
+    #address-cells = <1>;
+    #size-cells = <1>;
+
+    aliases {
+        ethernet0 = &ethernet;
+        //mac_mdio0 = &mdio0;
+    } ;
+
+
+    soc: soc {
+        compatible = "simple-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        pinctrl: pinctrl@08000000 {
+            compatible = "anyka,ak3918av130-pinctrl";
+            #address-cells = <1>;
+            #size-cells = <1>;
+            clocks = <&gate_clk CLOCK_ID_GCLK_GPIO>;
+            status = "okay";
+        };
+
+        gpio: gpio@20170000 {
+            compatible = "anyka,ak3918av130-gpio";
+            reg = <0x20170000 0xffff>,
+            <0x20400000 0x1000>,    /* mipi0 */
+            <0x20480000 0x1000>;    /* mipi1 */
+
+            /*interrupt-controller;*/
+            /*#interrupt-cells = <2>;*/
+            /*interrupts = <15 0>;*/
+            /*clocks = <&gclk_asic ASIC_GCLK_GPIO>;*/
+
+            gpio-controller;
+            #gpio-cells = <2>;
+            status = "okay";
+        };
+
+        mmc0: mmc0@20100000 {
+            compatible = "anyka,ak3918av130-mmc0";
+            reg = <0x20100000 0x7fff>;
+            /*interrupts = <4 0>,<28 0>;*/
+            clocks = <&gate_clk CLOCK_ID_GCLK_MMC0>;
+            status = "disable";
+        };
+
+        mmc1: mmc1@20108000 {
+            compatible = "anyka,ak3918av130-mmc1";
+            reg = <0x20108000 0x7fff>;
+            /*interrupts = <5 0>, <28 0>;*/
+            clocks = <&gate_clk CLOCK_ID_GCLK_MMC1>;
+            status = "disable";
+        };
+
+        mmc2: mmc2@201B0000 {
+            compatible = "anyka,ak3918av130-mmc2";
+            reg = <0x201B0000 0x7fff>;
+            /*interrupts = <27 0>,<28 0>;*/
+            clocks = <&gate_clk CLOCK_ID_GCLK_MMC2>;
+            status = "disable";
+        };
+
+        ethernet: eth0@20240000 {
+            compatible = "anyka,ak3918av130-ethernet";
+            reg = <0x20240000 0x1fff>;
+            clocks = <&factor_clk CLOCK_ID_FACTOR_MAC_REFCLK>,<&gate_clk CLOCK_ID_GCLK_MAC>;
+            mac-address = [ 00 00 00 00 00 01 ];
+            phy-mode = "rmii";
+            phy-address = <1>;
+
+            status = "disable";
+        };
+
+        uart0: uart0@20130000 {
+            compatible = "anyka,ak3918av100plus-uart0";
+            reg = <0x20130000 0x7fff>;
+            /*interrupts = <10 0>;*/
+            fifosize = <64>;
+            clocks = <&gate_clk CLOCK_ID_GCLK_UART0>;
+            status = "disable";
+        };
+
+        uart2: uart2@0x201a0000 {
+            compatible = "anyka,ak3918av100plus-uart2";
+            reg = <0x201a0000 0x7fff>;
+            /*interrupts = <10 0>;*/
+            fifosize = <64>;
+            clocks = <&gate_clk CLOCK_ID_GCLK_UART2>;
+            status = "disable";
+        };
+
+        usb: usb@20200000 {
+            compatible = "anyka,ak3918av130-usb";
+            reg = <0x20200000 0x7fff>;
+            clocks = <&gate_clk CLOCK_ID_GCLK_USB>;
+            status = "disable";
+        };
+
+        spi0: spi0@20120000 {
+            compatible = "anyka,ak3918av100-spi0";
+            reg = <0x20120000 0x7fff>;
+            /*interrupts = <8 0>;*/
+            clocks = <&gate_clk CLOCK_ID_GCLK_SPI0>, <&factor_clk CLOCK_ID_FACTOR_SPI0_CLK>;
+            clock-names = "spi0", "spi0_bus";
+            spi-max-frequency = <80000000>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "disable";
+
+            spi_flash@0 {
+                compatible = "anyka,ak-spiflash";
+                reg = <0>; /* Chip select 0 */
+                status = "disable";
+                #address-cells = <1>;
+                #size-cells = <0>;
+            };
+
+            spi-nand@1 {
+                #address-cells = <1>;
+                #size-cells = <1>;
+                compatible = "spi-nand";
+                reg = <1>;
+            };
+        };
+    };
+
+    clocks {
+        pll2_clk: pll2_clk {
+            compatible = "anyka,fixed-clk";
+            u-boot,dm-pre-reloc;
+            #clock-cells = <0>;
+            /*
+                * frequency = 24MHz * param_nf / param_nr / param_od
+                * param_od is automatically computed
+                * pll2 param, default:
+                *		param_nf = 40		(39 + 1)
+                *		param_nr = 1		(0 + 1)
+                *		param_od = 4		(3 + 1)
+                *		frequency = 24MHz * 40 / 1 / 4 = 240MHz
+                * pll2 param, 800MHz:
+                *		param_nf = 100		(99 + 1)
+                *		param_nr = 3		(2 + 1)
+                *		param_od = 1		(0 + 1)
+                *		frequency = 24MHz * 100 / 3 / 1 = 800MHz
+                * pll2 param, 400MHz:
+                *		param_nf = 100		(99 + 1)
+                *		param_nr = 1		(0 + 1)
+                *		param_od = 6		(5 + 1)
+                *		frequency = 24MHz * 100 / 1 / 6 = 400MHz
+                */
+            clock-param-nf = <100>;
+            clock-param-nr = <1>;
+            clock-frequency = <400000000>;
+            gclk-frequency  = <200000000>;
+            clock-param-nb = <16>;
+            status = "okay";
+        };
+
+        gate_clk: gate_clk {
+            compatible = "anyka,gate-clk";
+            u-boot,dm-pre-reloc;
+            #clock-cells = <1>;
+            clocks = <&pll2_clk>;
+            status = "okay";
+        };
+
+        factor_clk: factor_clk {
+            compatible = "anyka,factor-clk";
+            u-boot,dm-pre-reloc;
+            #clock-cells = <1>;
+            clocks = <&pll2_clk>;
+            status = "okay";
+        };
+    };
+};

@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Anyka37D SoC device tree source
+ *
+ */
+#include "anycloud_ak37d_common.dtsi"

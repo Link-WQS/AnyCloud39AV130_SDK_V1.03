@@ -1,0 +1,140 @@
+/*
+ * Anycloud37e develop board dts
+ *
+ * Copyright (C) 2020 Anyka(Guangzhou) Microelectronics Technology Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+/dts-v1/;
+#include "anycloud_ak39ev33x.dtsi"
+#include "anycloud_ak39ev33x_pinctrl.dtsi"
+
+/ {
+    compatible = "anyka,ak39ev330";
+    model = "S330_CBD_AK3918EV33X_V1.0.0 board";
+    version = "V1.0.00";
+};
+
+&pinctrl {
+    /*
+    * "anyka,function": func index, please refer to dt-bindings/pinctrl/ak_ak39ev33x_pinctrl.h
+    * "anyka,pull": configuration of the pins
+    * bit[7:0]: pull up/down configuration
+    *     bit[0]: pull up or pull down selection, 1 means select pull down, 0 means select pull up
+    *     bit[4]: pull up or pull down enable, 1 means enable pull up&down function, 0 means disable fuction
+    * !!! Notice that not all pin support pull up and pull down. Please refer to the programer's guide.
+    * bit[15:8]: driver strength configuration.
+    *     bit[9:8] drive strength.
+    * bit[23:16]: input enable configuration
+    *     bit[16]: 1 means enable input, 0 means disable input.
+    * bit[31:24]: pin slew rate configuration
+    *     bit[24]: 1 means enable slew rate, 0 means disable slew rate.
+    * !!! Notice OTHER bits which not mentioned please set to 0.
+    */
+
+    uart0_pins: uart0_pins {
+        anyka,pins = <XGPIO_001 XGPIO_002>;
+        anyka,function = <1>;
+        anyka,pull = <0x00000010>;
+    };
+
+    phy_reset_pins: phy_reset_pins {
+        anyka,pins = <XGPIO_082>;
+        anyka,function = <0>;
+        anyka,pull = <0x00000010>;
+    };
+	
+	mci1_pins: mci1_pins {
+        /* 4 line */
+        anyka,pins = <41 42 24 23 20 19>;/*MCI1*/
+        anyka,function = <1 1 2 2 2 2>;
+        anyka,pull = <0x00000010>;
+    };
+  mci1_pins_idle: mci1_pins_idle {
+        anyka,pins = <41 42 24 23 20 19>;/*MCI1*/
+        anyka,function = <0 0 0 0 0 0>;
+        anyka,pull = <0x00000000>;
+    };
+
+  mci1_power_pin: mci1_power_pin {
+        anyka,pins = <13>;
+        anyka,function = <0>;
+        anyka,pull = <0x00000000>;
+    };
+	
+
+	spiflash_pins: spiflash_pins {
+        anyka,pins = <XGPIO_025 XGPIO_026 XGPIO_035 XGPIO_036>; /* 4 LINE mode */
+        anyka,function = <1 1 2 2>;
+        anyka,pull = <0x00000010>;
+    };
+};
+
+
+&ethernet {
+    pinctrl-names = "default";
+    pinctrl-0 = <&ethernet_pins_rmii &phy_reset_pins>;
+    phy-reset = <&gpio XGPIO_082 1>;
+    phy-address = <1>;
+
+    status = "disable";
+};
+
+&uart0 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&uart0_pins>;
+    status = "okay";
+};
+
+&spi0 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&spiflash_pins>;
+    spi-max-frequency = <50000000>;
+    /*
+     * cap-spi-highspeed;
+     * if defined, means high speed controller(Maximum 80M/s);
+     * if not, means normal speed controller(below 60M/s)
+     */
+    cap-spi-highspeed;
+    /* spi flash data bus width:
+        ** 1 means 1 wire mode.
+        ** 2 means 2 wire mode
+        ** 4 means 4 wire mode.
+        ** default: 4 wire mode.
+        **/
+    bus-width = <4>;
+    mode = <3>; /* spi mode selected  */  
+    status = "okay";
+};
+
+&mmc1 {
+	  mci_id = <0x1>;  //for mmc id
+    bus-width = <0x4>;
+    max-frequency = <50000000>;
+    /*
+     *  detect mode:
+     *  (1) non-removable;
+     *  (2) detect-gpio/detect-gpios: card detect using gpio
+     *      for example:
+     *      detect-gpio = <&gpio 76 1>;  or detect-gpios = <&gpio 76 1>;
+     *  (3) cd_clk: card detect using MCLK
+     */
+    cd_clk;
+    /* if support highspeed, using cap-sd-highspeed */
+    cap-sd-highspeed;
+    pinctrl-names = "default","idle";
+    pinctrl-0 = <&mci1_pins &mci1_power_pin>;
+    pinctrl-1 = <&mci1_pins_idle>;
+    power-pins = <&gpio 13 0>;
+    power-inverted;
+
+    status = "okay";
+};

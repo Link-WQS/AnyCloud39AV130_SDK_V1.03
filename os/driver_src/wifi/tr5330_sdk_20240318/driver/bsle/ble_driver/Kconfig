@@ -1,0 +1,33 @@
+#===============================================================================
+# @brief    Kconfig file.
+# Copyright (c) @CompanyNameMagicTag 2023-2023. All rights reserved.
+#===============================================================================
+menu "Configure the ble ini file"
+
+config CONFIG_INI_BLE_DISABLE_LL_PRIVACY
+    bool "ble disable ll privacy"
+    default n
+
+config CONFIG_INI_BLE_TV_RC_SCAN_INTERVAL
+    int "ble tv rc scan interval"
+    default 480
+    range 4 65535
+    --help--
+        ble tv rc scan interval, default 480 slots which is 300 ms (value range 4-65535)
+
+config CONFIG_INI_BLE_TV_RC_SCAN_WINDOW
+    int "ble tv rc scan window"
+    default 48
+    range 4 65535
+    --help--
+        ble tv rc scan window, default 48 slots which is 30 ms (value range 4-65535)
+
+config CONFIG_INI_BSLE_FRONT_SWITCH
+    bool "bsle front switch"
+    default n
+
+endmenu
+
+config CONFIG_BLE_MAC_FORK
+    bool "is ble mac forked"
+    default y

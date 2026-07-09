@@ -1,0 +1,29 @@
+#! /bin/sh
+
+/etc/ak_venc_sample -n 5000 -o h264 -b 1 -t 1024 -r 30  -m 11 -d 0 -p /tmp -a 0 -c /fast/*.conf -f 1 &
+
+echo "mount all file system..."
+mkdir /dev/pts
+/bin/mount -av
+
+mknod /dev/console c 5 1
+mknod /dev/null    c 1 3
+
+runlevel=S
+prevlevel=N
+umask 022
+export runlevel prevlevel
+
+mkdir /var/cache
+mkdir /var/run
+mkdir /var/log
+mkdir /var/spool
+
+echo "**************************"
+echo "    Love Linux ! ! ! "
+echo "**************************"
+
+/bin/hostname -F /etc/sysconfig/HOSTNAME
+
+#local service
+/etc/init.d/rc.local

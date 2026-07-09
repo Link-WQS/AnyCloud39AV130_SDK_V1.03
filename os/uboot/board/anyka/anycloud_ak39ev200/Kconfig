@@ -1,0 +1,15 @@
+if TARGET_ANYCLOUD_AK39EV200
+
+config SYS_BOARD
+	default "anycloud_ak39ev200"
+
+config SYS_VENDOR
+	default "anyka"
+
+config SYS_SOC
+	default "ak39ev200"
+
+config SYS_CONFIG_NAME
+	default "anycloud_ak39ev200"
+
+endif

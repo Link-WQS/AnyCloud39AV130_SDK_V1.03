@@ -1,0 +1,2 @@
+1、修改build_aic8800.sh，填写正确的KDIR
+2、执行./build_aic8800.sh编译驱动，生成out目录，里面放置ko驱动文件。

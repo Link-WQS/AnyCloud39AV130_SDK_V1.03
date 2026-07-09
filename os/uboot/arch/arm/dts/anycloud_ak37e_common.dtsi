@@ -1,0 +1,177 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Anyka37E SoC device tree source
+ *
+ */
+
+#include <dt-bindings/clock/ak37e-clock.h>
+/ {
+    compatible = "anyka,ak37e";
+    #address-cells = <1>;
+    #size-cells = <1>;
+
+	aliases {
+        ethernet0 = &ethernet;
+		ethernet1 = &ethernet1;
+		//mac_mdio0 = &mdio0;
+	} ;
+
+
+    soc: soc {
+        compatible = "simple-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        pinctrl: pinctrl@08000000 {
+            compatible = "anyka,ak37e-pinctrl";
+            #address-cells = <1>;
+            #size-cells = <1>;
+            clocks = <&gate_clk ASIC_GCLK_GPIO>;
+            status = "okay";
+        };
+
+        gpio: gpio@20170000 {
+            compatible = "anyka,ak37e-gpio";
+            reg = <0x20170000 0xffff>,
+            <0x20400000 0x1000>,    /* mipi0 */
+            <0x20480000 0x1000>;    /* mipi1 */
+
+            /*interrupt-controller;*/
+            /*#interrupt-cells = <2>;*/
+            /*interrupts = <15 0>;*/
+            /*clocks = <&gclk_asic ASIC_GCLK_GPIO>;*/
+
+            gpio-controller;
+            #gpio-cells = <2>;
+            status = "okay";
+        };
+
+        mmc0: mmc0@20100000 {
+            compatible = "anyka,ak37e-mmc0";
+            reg = <0x20100000 0x7fff>;
+            /*interrupts = <4 0>,<28 0>;*/
+            clocks = <&gate_clk ASIC_GCLK_MMC0>;
+            status = "disable";
+        };
+
+        mmc1: mmc1@20108000 {
+            compatible = "anyka,ak37e-mmc1";
+            reg = <0x20108000 0x7fff>;
+            /*interrupts = <5 0>, <28 0>;*/
+            clocks = <&gate_clk ASIC_GCLK_MMC1>;
+            status = "disable";
+        };
+
+        mmc2: mmc2@201B0000 {
+            compatible = "anyka,ak37e-mmc2";
+            reg = <0x201B0000 0x7fff>;
+            /*interrupts = <27 0>,<28 0>;*/
+            clocks = <&gate_clk ASIC_GCLK_MMC2>;
+            status = "disable";
+        };
+
+		ethernet: eth0@20300000 {
+			compatible = "anyka,ak37e-ethernet";
+			reg = <0x20300000 0x1fff>;
+			mac-address = [ 00 00 00 00 00 01 ];
+			phy-mode = "rmii";
+			phy-address = <1>;
+
+			status = "disable";
+		};
+
+		ethernet1: eth1@20500000 {
+			compatible = "anyka,ak37e-ethernet1";
+			reg = <0x20500000 0x1fff>;
+			mac-address = [ 00 00 00 00 00 01 ];
+			phy-mode = "rmii";
+			phy-address = <1>;
+
+			status = "disable";
+
+		};
+
+
+        uart0: uart0@20130000 {
+            compatible = "anyka,ak37e-uart0";
+            reg = <0x20130000 0x7fff>;
+            /*interrupts = <10 0>;*/
+            fifosize = <64>;
+            clocks = <&gate_clk ASIC_GCLK_UART0>;
+            status = "disable";
+        };
+
+        usb: usb@20200000 {
+            compatible = "anyka,ak37e-usb";
+            reg = <0x20200000 0x7fff>;
+            clocks = <&gate_clk ASIC_GCLK_USB>;
+            status = "disable";
+        };
+
+        spi0: spi0@20120000 {
+            compatible = "anyka,ak37e-spi0";
+            reg = <0x20120000 0x7fff>;
+            /*interrupts = <8 0>;*/
+            clocks = <&gate_clk ASIC_GCLK_SPI0>, <&factor_clk ASIC_FACTOR_SPI0_CLK>;
+            clock-names = "spi0", "spi0_bus";
+						spi-max-frequency = <80000000>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "disable";
+
+            spi_flash@0 {
+                compatible = "anyka,ak-spiflash";
+                reg = <0>; /* Chip select 0 */
+                status = "disable";
+                #address-cells = <1>;
+                #size-cells = <0>;
+            };
+
+            spi-nand@1 {
+                #address-cells = <1>;
+                #size-cells = <1>;
+                compatible = "spi-nand";
+                reg = <1>;
+            };
+        };
+
+		lcdc: lcdc@20010000 {
+	       compatible = "anyka,ak37e-lcd-ctrl";
+	       reg = <0x20010000 0x7fff>, /* lcd ctrl */
+	             <0x20600000 0xffff>; /* dsi ctrl */
+	       /*interrupts = <25 0>;*/
+	       /*clocks = <&gclk_asic ASIC_GCLK_LCD_CONTROLLER>, <&gclk_asic ASIC_GCLK_DSI>;*/
+	       /*clock-names = "lcdc", "mipi_dsi";*/
+	       status = "disable";
+        };
+    };
+
+    clocks {
+        asic_pll: asic_pll {
+            compatible = "anyka,fixed-clk";
+            u-boot,dm-pre-reloc;
+            #clock-cells = <0>;
+            clock-div-od = <1>;
+            clock-div-n = <3>;
+            clock-frequency = <500000000>;
+            status = "okay";
+        };
+
+        gate_clk: gate_clk {
+            compatible = "anyka,gate-clk";
+            u-boot,dm-pre-reloc;
+            #clock-cells = <1>;
+            clocks = <&asic_pll>;
+            status = "okay";
+        };
+
+        factor_clk: factor_clk {
+            compatible = "anyka,fator-clk";
+            u-boot,dm-pre-reloc;
+            #clock-cells = <1>;
+            clocks = <&asic_pll>;
+            status = "okay";
+        };
+    };
+};

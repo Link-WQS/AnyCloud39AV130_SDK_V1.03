@@ -1,0 +1,87 @@
+if ARCH_AK37E
+
+config PINCTRL_AK37E
+	bool "ak37e pin control drivers"
+	depends on ARCH_AK37E&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak37e.
+
+endif
+
+if ARCH_AK37D
+
+config PINCTRL_AK37D
+	bool "ak37d pin control drivers"
+	depends on ARCH_AK37D&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak37d.
+
+endif
+
+if ARCH_AK39EV33X
+
+config PINCTRL_AK39EV33X
+	bool "ak39ev33x pin control drivers"
+	depends on ARCH_AK39EV33X&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak39ev33x.
+
+endif
+
+if ARCH_AK3918AV100
+
+config PINCTRL_AK3918AV100
+	bool "ak3918av100 pin control drivers"
+	depends on ARCH_AK3918AV100&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak3918av100.
+
+endif
+
+if ARCH_AK3918AV130
+
+config PINCTRL_AK3918AV130
+	bool "ak3918av130 pin control drivers"
+	depends on ARCH_AK3918AV130&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak3918av130.
+
+endif
+
+if ARCH_KM01A
+
+config PINCTRL_KM01A
+	bool "km01a pin control drivers"
+	depends on ARCH_KM01A&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for km01a.
+
+endif
+
+if ARCH_AK3918EV300L
+
+config PINCTRL_AK3918EV300L
+	bool "ak3918ev300l pin control drivers"
+	depends on ARCH_AK3918EV300L&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak3918ev300l.
+
+endif
+
+if ARCH_AK39EV200
+
+config PINCTRL_AK39EV200
+	bool "ak39ev200 pin control drivers"
+	depends on ARCH_AK39EV200&& PINCTRL_GENERIC
+	default y
+	help
+	  Enable support pin control functions for ak39ev200.
+
+endif

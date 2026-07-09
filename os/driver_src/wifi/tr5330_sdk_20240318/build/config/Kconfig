@@ -1,0 +1,5 @@
+config WSCFG_MFG_TEST
+	bool "Enable MFG TEST"
+	default y
+	select WIFI_ALWAYS_TX
+	depends on WSCFG_LINUX

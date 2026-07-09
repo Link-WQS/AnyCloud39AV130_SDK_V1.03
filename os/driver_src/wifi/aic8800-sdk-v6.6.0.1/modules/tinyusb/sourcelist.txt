@@ -1,0 +1,18 @@
+# tinyusb files
+  tusb.c
+  common/tusb_fifo.c
+  device/usbd.c
+  device/usbd_control.c
+  host/hub.c
+  host/usbh.c
+  class/cdc/cdc_device.c
+  class/cdc/cdc_host.c
+  class/cdc/cdc_rndis_host.c
+  class/net/ncm_device.c
+  class/net/ecm_rndis_device.c
+  #if (env['FHOST_APP'] == 'rndis_host')
+  class/net/rndis_host.c
+  #endif #(env['FHOST_APP'] == 'rndis_host')
+  portable/dcd_dwc2.c
+  portable/hcd_dwc2.c
+  portable/family.c

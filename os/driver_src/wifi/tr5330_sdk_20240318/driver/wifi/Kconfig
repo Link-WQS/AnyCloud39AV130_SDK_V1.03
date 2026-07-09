@@ -1,0 +1,356 @@
+menu "Configure the WiFi ini file"
+
+config WSCFG_INI_DBAC_STA_GC_RATIO
+	int "dbac sta gc ratio"
+	default 50
+	range 20 80
+	--help--
+		dbac coexistence gc vap occupying air interface ratio, default 50 (value range 20-80)
+
+config WSCFG_INI_DBAC_STA_GO_RATIO
+	int "dbac sta go ratio"
+	default 30
+	range 20 80
+	--help--
+		dbac coexistence go vap occupying air interface ratio, default 30 (value range 20-80)
+
+config CONFIG_INI_PROTOCOL_11AX
+	bool "Enable 802.11ax Forced"
+	default n
+
+config CONFIG_INI_HOST_GPIO
+	int "power gpio idx"
+	default 40
+
+config CONFIG_INI_BT_COEX_MODE
+	int "bt coex mode"
+	default 1
+
+endmenu
+
+comment "WiFi feature configuration"
+
+config WSCFG_WLAN_INIT_VAP_COUNT
+	int "number of Wi-Fi interface to be created during wlan init"
+	default 2
+	range 1 3
+
+config WIFI_DEBUG
+	bool "Enable WIFI DEBUG"
+	default y
+	--help--
+		Serial port printing, debugging commands, and special packets (DNS dhcp) printing
+
+config WLAN_WFA_TEST
+	bool "Enable WIFI WFA TEST special code flow"
+	default n
+	--help--
+		WFA test special code flow
+
+config WIFI_CSA
+	bool "Enable WIFI CSA"
+	default y
+	--help--
+		Channel-Switch-Announcement(CSA) Used to migrate from one channel to another
+
+config WIFI_WPS
+	bool "Enable WPS"
+	default y
+	--help--
+		 A wireless network security standard that tries to make connections between a router
+		 and wireless devices faster and easier, which making it easy to add new devices to an existing
+		 network without entering long passphrases.
+
+config _PRE_WLAN_FEATURE_WPA3
+	bool "Enable WPA3"
+	default y
+	--help--
+		WPA3 encryption
+
+menuconfig WSCFG_WIFI_ENHANCE
+	bool "Wifi Enhance Feature"
+	default y
+	--help--
+		Some features that can enhance Wi-Fi when enabled
+
+	if WSCFG_WIFI_ENHANCE
+		config WIFI_BSRP_NFRP
+			bool "Enable BSRP_NFRP"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				wifi6(802.11ax) feature Buffer-Status-Report-Poll(BSRP) and NDP-Feedback-Report-Poll(NFRP)
+
+		config WIFI_SLP
+			bool "Enable SLP"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				wifi feature SparkLink-Perception(SLP)
+
+		config WIFI_APF
+			bool "Enable APF"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				wifi feature Android-Packet-Filtering(APF)
+
+		config WIFI_BASE_ROAM
+			bool "Enable ROAM"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				wifi feature roam support STA roam to a new AP without being disconnected
+
+		config WIFI_11KVR
+			bool "Enable 11KVR"
+			default y
+			depends on WIFI_BASE_ROAM
+			--help--
+				802.11 standards kvr allow clients to roam more smoothly from one AP to another within the same network
+
+		config WIFI_MBO
+			bool "Enable MBO"
+			default y
+			depends on WIFI_11KVR
+			--help--
+				Multiband Operations (MBO) is an authentication program based on 11kvr
+
+		config WIFI_AUTO_ADJUST_FREQ
+			bool "Enable auto adjust freq"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Automatically adjusts the CPU frequency based on the incoming packet traffic to reduce power consumption
+
+		config WIFI_SINGLE_PROXYSTA
+			bool "Enable repeater"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				The sta single proxy mode must be used together with the bridge.
+
+		config WIFI_CSI
+			bool "Enable CSI"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				To get channel state information, This information describes how a signal propagates from the
+				transmitter to the receiver and represents the combined effect of, for example, scattering,
+				fading, and power decay with distance
+
+		config WIFI_M2U
+			bool "Enable M2U"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				 Multicast-To-Unicast conversion
+
+		config WIFI_BLACKLIST
+			bool "Enable blacklist"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Enable the Wi-Fi Blocklist and Trustlist Function
+
+		config WIFI_WAPI
+			bool "Enable WAPI"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				WAPI encryption
+
+		config WIFI_SDP
+			bool "Enable SDP"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				 Wifi aware service
+
+		config WIFI_LATENCY_STAT
+			bool "Enable latency stat"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Latency Stat is used to take statistics of packet delay time
+
+		config WIFI_PROMISC
+			bool "Enable promisc"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Promiscuous Mode be able to receive all data streams passing through it
+
+		config WIFI_TX_AMSDU
+			bool "Enable tx amsdu"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				If the length is less than 128 bytes(include head), packets can be sent in AMSDU aggregation mode
+
+		config WIFI_UAPSD
+			bool "Enable uapsd"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Unscheduled Automatic Power Save Delivery(UAPSD) is a priority-based power saving mode introduced by 802.11e
+
+		config WIFI_ANT_SEL
+			bool "Enable antenna selection"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Antenna Selection help obtain better signal
+
+		config WIFI_PSD
+			bool "Enable PSD"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Wifi Power Spectral Density(PSD)
+
+		config WIFI_TWT
+			bool "Enable TWT"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Wifi6(802.11ax) feature Target-Wake-Time(TWT) for powersave
+
+		config WIFI_DNB
+			bool "Enable DNB"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+
+		config WIFI_SR_STA
+			bool "Enable SR"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				wifi6(802.11ax) feature Spatial-Reuse(SR) and BSS-Color mechanism
+
+		config WIFI_ALG_CCA
+			bool "Enable alg cca"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Clear Channel Assessment dynamic adjustment, allows for better data transmission over
+				strong interferences
+
+		config WIFI_ALG_TEMP_PROTECT
+			bool "Enable alg temperature protect"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Used to protect the RF module when its temperature is overly high
+
+		config WIFI_ALG_TXBF
+			bool "Enable alg txbf"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Transmit Beamforming, turns on the su beamformee mode when enabled, useful when the peer has more than
+				one transmitting antennas
+
+		config WIFI_ALG_EDCA
+			bool "Enable alg edca"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Enhanced Distributed Channel Access, allows the clients to dynamically adjust their channel access
+				params while transmitting data
+
+		config WIFI_ALG_ANTI_INTF
+			bool "Enable alg anti interference"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Allows for better data transmission through filtering out weak interferences
+
+		config _PRE_WLAN_FEATURE_TX_CLASSIFY_LAN_TO_WLAN
+			bool "Enable tx classify"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Perform WLAN QoS operations based on 5-tuple
+
+		config WIFI_WOW
+			bool "Enable WOW"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Wake on WLAN, allows remote systems to wake up the sleeping client by sending a frame of
+				specific format which the client anticipates
+
+		config WIFI_ALWAYS_TX
+			bool "Enable always tx"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Receive and transport packet, always enabled when option Enable MFG TEST enabled
+
+		config _PRE_WLAN_DFT_STAT
+			bool "Enable DFT"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Maintenance and test methods for locating various problems
+
+		config _PRE_WLAN_FEATURE_SNIFFER
+			bool "Enable SNIFFER"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+
+		config WIFI_BASE_DFR
+			bool "Enable DFR"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+
+		config _PRE_WLAN_FEATURE_DFR
+			bool "Enable DFR panic recovery"
+			default y
+			depends on WIFI_BASE_DFR
+
+		config _PRE_WLAN_DFR_STAT
+			bool "Enable DFR stat"
+			default y
+			depends on WIFI_BASE_DFR
+
+		config WIFI_DAQ
+			bool "Enable DAQ"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Enable data collection at the MAC, PHY, and SOC layers
+
+		config _PRE_WLAN_SUPPORT_CCPRIV_CMD
+			bool "Enable ccpriv commands"
+			default y
+			depends on WSCFG_WIFI_ENHANCE
+			--help--
+				Enable ccpriv commands
+
+	endif
+
+config WIFI_BTCOEX
+	bool "Enable wifi-bt coexist"
+	default y
+	--help--
+		Wi-Fi and Bluetooth Coexistence
+
+config WIFI_ONLINE_CALI
+        bool "Enable online cali"
+        default y
+
+config _PRE_WLAN_WIRELESS_EXT
+		bool "Enable Wireless EXT"
+		default y
+
+config WIFI_TCP_ACK_FILTER
+	bool "Enable Tcp Ack Filter"
+	default y
+	--help--
+		Tcp Ack Filter provides a way to filter Tcp Ack for higher rate
+
+config CONTROLLER_CUSTOMIZATION
+	bool "Enable controller customization"
+	default n

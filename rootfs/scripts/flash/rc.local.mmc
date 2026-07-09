@@ -1,0 +1,31 @@
+#!/bin/sh
+
+echo "/bin/mount -t squashfs /dev/mmcblk0p8 /usr"
+/bin/mount -t squashfs /dev/mmcblk0p8 /usr
+
+#可读写格式
+echo "/bin/mount -t vfat /dev/mmcblk0p7 /etc/config"
+/bin/mount -t vfat -o rw /dev/mmcblk0p7 /etc/config
+
+## mount usr file-system.
+##/bin/mount -t squashfs /dev/mtdblock7 /usr
+#partition_app=`get_partition_dev APP`
+#if [ "$partition_app" != "" ];then
+#  echo "/bin/mount -t squashfs $partition_app /usr"
+#  /bin/mount -t squashfs $partition_app /usr
+#fi
+#
+## mount jffs2 file-system.
+##/bin/mount -t jffs2 /dev/mtdblock6 /etc/config
+#partition_config=`get_partition_dev CONFIG`
+#if [ "$partition_config" != "" ];then
+#  echo "/bin/mount -t jffs2 $partition_config /etc/config"
+#  /bin/mount -t jffs2 $partition_config /etc/config
+#fi
+#
+## note: can't recommend running other app before `mount` command.
+
+ifconfig lo 127.0.0.1
+
+#start system service
+/usr/sbin/main.sh &

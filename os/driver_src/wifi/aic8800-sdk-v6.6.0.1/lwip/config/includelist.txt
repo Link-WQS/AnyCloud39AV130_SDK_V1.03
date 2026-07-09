@@ -1,0 +1,30 @@
+# Include path
+   $NETS_DIR/src/include
+   $NETS_DIR/src/include/lwip
+   $NETS_DIR/src/include/lwip/apps
+   $NETS_DIR/src/include/lwip/priv
+   $NETS_DIR/src/include/lwip/prot
+   $NETS_DIR/src/include/netif
+   $NETS_DIR/src/include/netif/ppp
+   $NETS_DIR/src/include/netif/ppp/polarssl
+   $NETS_DIR/src/include/posix
+   $NETS_DIR/src/include/posix/sys
+   $NETS_DIR/src/include/compat/posix
+   $NETS_DIR/src/include/compat/posix/sys
+   $NETS_DIR/ports/rtos/include
+   net_al
+#if (env['SOFTAP'] != 'off')
+   dhcps
+#endif #(env['SOFTAP'] != 'off')
+#if (env['MQTT'] != 'off')
+   # Include path
+   $NETS_DIR/src/apps/mqttclient/mqttclient
+   $NETS_DIR/src/apps/mqttclient/mqtt
+   $NETS_DIR/src/apps/mqttclient/network/
+   #$NETS_DIR/src/appsmqttclient//network/mbedtls/include/mbedtls
+   $NETS_DIR/src/apps/mqttclient/mqtt_common
+   $NETS_DIR/src/apps/mqttclient/platform/FreeRTOS
+   $NETS_DIR/src/apps/mqttclient/test
+   $NETS_DIR/src/apps/mqttclient/mqtt_common/log
+   $NETS_DIR/src/apps/mqttclient/mqtt_common/PLOOC
+#endif #(env['MQTT'] != 'off')

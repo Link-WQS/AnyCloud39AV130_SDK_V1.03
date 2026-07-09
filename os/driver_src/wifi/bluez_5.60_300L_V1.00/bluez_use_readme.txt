@@ -1,0 +1,16 @@
+bluez应用编程：
+1、bluez_V5.60_all.tar.gz包是bluez 5.60相关工具以及依赖库，基于bluez做应用开始时
+头文件及依赖库都可从这个包中获取。
+2、anyka_sdk_lib_300L中是sdk自带的iconv库，在编译bluez应用时需要连接此库。
+
+带bluez的rootfs制作：
+1、rootfs_bluez_other_300L中是300L平台上bluez打包到rootfs所需的辅助配置。
+2、config.mk和make_rootfs.sh则是制作包含bluez的rootfs脚本。主要是删除bluez_V5.60_all中
+部分不需要的文件，strip部分比较大的依赖库等操作。脚本执行后默认会生成rootfs_bluez_V1.00_300L目录，
+用户只需要将此目录的所有文件合并到sdk的rootfs目录然后打包下载即可。
+
+
+bluez应用程序运行：
+1、资源包中已经制作好了一个bluez_export.sh脚本用于配置bluez运行环境，用户需要根据自己的情况可做修改。为了
+是脚本中export的环境变量一直有效需要执行命令：. bluez_export.sh。
+2、资源包中还包含了一个uart_server的简单bluez应用，可以与nrf connect app实现互发数据，可供用户参考。

@@ -1,0 +1,195 @@
+/*
+ * Anycloud37e develop board dts
+ *
+ * Copyright (C) 2020 Anyka(Guangzhou) Microelectronics Technology Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+#include "anycloud_ak3918av100.dtsi"
+#include "anycloud_ak3918av100_pinctrl.dtsi"
+
+/ {
+    compatible = "anyka,ak3918AV100";
+    model = "EVB_CBD_AK3918AV100_svt_V1.0.0 board";
+    version = "V1.0.00";
+};
+
+&pinctrl {
+    /*
+    * "anyka,function": func index, please refer to dt-bindings/pinctrl/ak_3918av100_pinctrl.h
+    * "anyka,pull": configuration of the pins
+    * bit[7:0]: pull up/down configuration
+    *     bit[0]: pull up or pull down selection, 1 means select pull down, 0 means select pull up
+    *     bit[4]: pull up or pull down enable, 1 means enable pull up&down function, 0 means disable fuction
+    * !!! Notice that not all pin support pull up and pull down. Please refer to the programer's guide.
+    * bit[15:8]: driver strength configuration.
+    *     bit[9:8] drive strength.
+    * bit[23:16]: input enable configuration
+    *     bit[16]: 1 means enable input, 0 means disable input.
+    * bit[31:24]: pin slew rate configuration
+    *     bit[24]: 1 means enable slew rate, 0 means disable slew rate.
+    * !!! Notice OTHER bits which not mentioned please set to 0.
+    */
+
+    mmc1_pins: mmc1_pins {
+        anyka,pins = <XGPIO_035 XGPIO_036 XGPIO_033 XGPIO_034 XGPIO_031 XGPIO_032>;
+        anyka,function = <XGPIO_035_FUNC_SD0_D0
+                            XGPIO_036_FUNC_SD0_D1
+                            XGPIO_033_FUNC_SD0_CMD
+                            XGPIO_034_FUNC_SD0_MCLK
+                            XGPIO_031_FUNC_SD0_D2
+                            XGPIO_032_FUNC_SD0_D3>;
+
+        anyka,pull = <(INPUT_EN|PUPD_EN)
+						(INPUT_EN|PUPD_EN)
+						(INPUT_EN|PUPD_EN)
+						(INPUT_EN|PULL_DOWN)
+						(INPUT_EN|PUPD_EN)
+						(INPUT_EN|PUPD_EN)
+						>;
+    };
+
+    mmc1_pins_idle: mmc1_pins_idle {
+        anyka,pins = <XGPIO_035 XGPIO_036 XGPIO_033 XGPIO_034 XGPIO_031 XGPIO_032>;
+        anyka,function = <XGPIO_035_FUNC_GPIO35
+                            XGPIO_036_FUNC_GPIO36
+                            XGPIO_033_FUNC_GPIO33
+                            XGPIO_034_FUNC_GPIO34
+                            XGPIO_031_FUNC_GPIO31
+                            XGPIO_032_FUNC_GPIO32>;
+        anyka,pull = <0x00000000>;
+    };
+
+	//EVB_CBDM_SVT
+    mmc1_detect_pin: mmc1_detect_pin {
+        anyka,pins = <XGPIO_037>;
+        anyka,function = <XGPIO_037_FUNC_GPIO37>;
+        anyka,pull = <INPUT_EN>;
+    };
+    
+    mmc1_power_pin: mmc1_power_pin {
+        anyka,pins = <XGPIO_050>;
+        anyka,function = <XGPIO_050_FUNC_GPIO50>;
+        anyka,pull = <0x00000000>;
+    };
+
+    ethernet_rmii0_pins: ethernet_rmii0_pins {
+        anyka,pins = <XGPIO_003
+                        XGPIO_005
+                        XGPIO_001
+                        XGPIO_002
+                        XGPIO_011
+                        XGPIO_006
+                        XGPIO_000
+                        XGPIO_007
+                        XGPIO_008
+                        XGPIO_004>;
+        anyka,function = <XGPIO_003_FUNC_RMII_MDIO
+                            XGPIO_005_FUNC_RMII_MDC
+                            XGPIO_001_FUNC_RMII_RXER
+                            XGPIO_002_FUNC_RMII_RXDV
+                            XGPIO_011_FUNC_RMII_RXD0
+                            XGPIO_006_FUNC_RMII_RXD1
+                            XGPIO_000_FUNC_OPCLK1
+                            XGPIO_007_FUNC_RMII_TXD0
+                            XGPIO_008_FUNC_RMII_TXD1
+                            XGPIO_004_FUNC_RMII_TXEN
+                            >;
+        anyka,pull = <(INPUT_EN|PUPD_EN)
+                        (INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (DRIVE_04MA|INPUT_EN)
+                        (FAST_CTRL|INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (FAST_CTRL|INPUT_EN|PUPD_EN|PULL_DOWN)
+                        (INPUT_EN|PUPD_EN|PULL_DOWN)
+                        >; 
+    };
+
+    ethernet_rmii0_rst_pins: ethernet_rmii0_rst_pins {
+        anyka,pins = <XGPIO_064>;
+        anyka,function = <XGPIO_064_FUNC_GPIO64>;
+        anyka,pull = <(INPUT_EN|PUPD_EN)>;
+    }; 
+};
+
+&mmc1 {
+    pinctrl-names = "default","idle";
+    pinctrl-0 = <&mmc1_pins &mmc1_detect_pin &mmc1_power_pin>;
+    pinctrl-1 = <&mmc1_pins_idle>;
+
+	mci_id = <0x0>;  //for mmc id
+    bus-width = <0x4>;
+    max-frequency = <50000000>;
+    /*
+     *  detect mode:
+     *  (1) non-removable;
+     *  (2) detect-gpio/detect-gpios: card detect using gpio
+     *      for example:
+     *      detect-gpio = <&gpio 76 1>;  or detect-gpios = <&gpio 76 1>;
+     *  (3) cd_clk: card detect using MCLK
+     */
+    detect-gpio = <&gpio 12 1>; //EVB_CBDM_SVT
+    /* if support highspeed, using cap-sd-highspeed */
+    cap-sd-highspeed; 
+    /*
+    * support tf card circuit enable function
+    */
+    power-pins = <&gpio 50 1>;      //power-pins is which tf_en_pins describes
+    power-inverted;
+    status = "okay";
+};
+
+
+&ethernet {
+    pinctrl-names = "default";
+	pinctrl-0 = <&ethernet_rmii0_pins &ethernet_rmii0_rst_pins>;
+    phy-reset = <&gpio 49 1>; //EVB_CBDM_SVT or EVB_CBDM_AK3918AV100P
+    //phy-reset = <&gpio 24 1>;//EVB_CBDM_AK3918AV100N
+	phy-address = <1>;
+
+	status = "okay";
+	    
+};
+
+&uart0 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&uart0_pins>;
+    status = "okay";
+};
+
+&spi0 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&spiflash_pins>;
+     /*pinctrl-names = "default";*/
+     /*pinctrl-0 = <&spiflash_pins>;*/
+    spi-max-frequency = <80000000>;
+    /*
+     * cap-spi-highspeed;
+     * if defined, means high speed controller(Maximum 80M/s);
+     * if not, means normal speed controller(below 60M/s)
+     */
+    cap-spi-highspeed;
+    /* spi flash data bus width:
+        ** 1 means 1 wire mode.
+        ** 2 means 2 wire mode
+        ** 4 means 4 wire mode.
+        ** default: 4 wire mode.
+        **/
+    bus-width = <4>;
+    mode = <3>; /* spi mode selected  */  
+    status = "okay";
+};
+

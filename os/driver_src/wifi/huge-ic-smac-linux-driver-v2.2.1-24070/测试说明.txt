@@ -1,0 +1,14 @@
+/* txw801²âÊÔ */
+echo 8 > /proc/sys/kernel/printk
+mount -t nfs -o nolock 172.16.10.180:/home/zouyingfu/nfs  mnt/ 
+modprobe mac80211
+modprobe cfg80211
+modprobe usb-common
+modprobe usbcore
+insmod /usr/modules/ak_hcd.ko
+cd /mnt/txw801_test/V300L/
+insmod firmware_class.ko path="/mnt/txw801_test/V300L"
+insmod hgics.ko
+
+wpa_supplicant -Dnl80211 -iwlan0 -c /etc/config/wpa_supplicant.conf -B
+udhcpc -t 30 -T 1 -i wlan0 -b

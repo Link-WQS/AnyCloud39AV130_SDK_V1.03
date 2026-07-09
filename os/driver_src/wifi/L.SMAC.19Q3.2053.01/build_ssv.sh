@@ -1,0 +1,11 @@
+#!/bin/bash
+SSV_DRV_PATH=/home/linhongdian/linux_fix_issue/linux_driver/wifi/L.SMAC.19Q3.2053.01
+KERNEL_OBJ_PATH=/home/linhongdian/AnyCloud39EV330_PDK_V1.01-2/os/bd/
+PLATFORM_TOOLCHAIN ?= arm-anycloud-linux-uclibcgnueabi-
+PLATFORM_ARCH=arm
+
+make -C $KERNEL_OBJ_PATH M=$SSV_DRV_PATH ARCH=$PLATFORM_ARCH CROSS_COMPILE=$PLATFORM_TOOLCHAIN modules clean
+
+make -C $KERNEL_OBJ_PATH M=$SSV_DRV_PATH ARCH=$PLATFORM_ARCH CROSS_COMPILE=$PLATFORM_TOOLCHAIN modules;make -C $SSV_DRV_PATH CROSS_COMPILE=$PLATFORM_TOOLCHAIN strip;sync
+
+

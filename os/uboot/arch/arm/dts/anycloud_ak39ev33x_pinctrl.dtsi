@@ -1,0 +1,52 @@
+/*
+ * AK37E SoC
+ *
+ * Copyright (C) 2020 Anyka(Guangzhou) Microelectronics Technology Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/*
+* NOTE:
+* This is the common configuration about pinctrl with those customers no need to care about.
+* Like the mmc/eth, customers will less to modify them.
+* IF your pins are strongly relate on the specifically board.
+* Please move them to the board related file.
+*/
+
+#include <dt-bindings/pinctrl/ak_39ev33x_pinctrl.h>
+
+&pinctrl {
+    /*
+    * "anyka,function": func index, please refer to dt-bindings/pinctrl/ak_39ev33x_pinctrl.h
+    * "anyka,pull": configuration of the pins
+    * bit[7:0]: pull up/down configuration
+    *     bit[0]: pull up or pull down selection, 1 means select pull down, 0 means select pull up
+    *     bit[4]: pull up or pull down enable, 1 means enable pull up&down function, 0 means disable fuction
+    * !!! Notice that not all pin support pull up and pull down. Please refer to the programer's guide.
+    */
+
+    uart1_pins: uart1_pins {
+        anyka,pins = <0 5>;
+        anyka,function = <2>;
+        anyka,pull = <0x00000010>;
+    };
+
+    /*
+    * RMII_MDC(GPIO[10]),RMII_MDIO(GPIO[11]),RMII_TXEN(GPIO[13]),RMII_TXD[0](GPIO[14]), RMII_TXD[1](GPIO15)
+    * RMII_RXD[0](GPIO[19]), RMII_RXD[1](GPIO[20]), RMII_RXER(GPIO[23]), RMII_RXDV(GPIO[24]), RMII_50M(OPCLK, GPIO[47])
+    */
+    ethernet_pins_rmii: ethernet_pins_rmii {
+        anyka,pins = <XGPIO_010 XGPIO_011 XGPIO_013 XGPIO_014 XGPIO_015 XGPIO_019 XGPIO_020 XGPIO_023 XGPIO_024 XGPIO_047>;
+        anyka,function = <1>;
+        anyka,pull = <0x00000011 0x00000010 0x00000011 0x00000011 0x00000011 0x00000011 0x00000011 0x00000011 0x00000011 0x00000001>;
+    };
+};

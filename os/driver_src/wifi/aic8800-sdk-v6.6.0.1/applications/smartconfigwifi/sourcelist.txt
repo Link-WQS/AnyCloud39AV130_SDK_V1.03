@@ -1,0 +1,3 @@
+# example files
+    src/fhost_smart_example.c
+    ../command_common/src/fhost_command_common.c

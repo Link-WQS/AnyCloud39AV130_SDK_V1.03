@@ -1,0 +1,28 @@
+if ARCH_KM01A
+
+config KM01A
+	bool "Enable KM01A support"
+
+config ENV_64M
+	bool "Enable 64M ENV support"
+
+config ENV_128M
+	bool "Enable 64M ENV support"
+
+choice
+	prompt "KM01A board select"
+	optional
+
+	config TARGET_ANYCLOUD_KM01A
+	bool "Support anycloud_km01a"
+	select CPU_ARM926EJS
+	select SUPPORT_SPL
+
+endchoice
+
+config SYS_SOC
+	default "km01a"
+
+source "board/anyka/anycloud_km01a/Kconfig"
+
+endif

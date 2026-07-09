@@ -1,0 +1,22 @@
+if ARCH_AK39EV33X
+
+config AK39EV33X
+	bool "Enable AK39EV33X support"
+
+choice
+	prompt "AK39EV33X board select"
+	optional
+
+	config TARGET_ANYCLOUD_AK39EV33X
+	bool "Support anycloud_ak39ev33x"
+	select CPU_ARM926EJS
+	select SUPPORT_SPL
+
+endchoice
+
+config SYS_SOC
+	default "ak39ev33x"
+
+source "board/anyka/anycloud_ak39ev33x/Kconfig"
+
+endif

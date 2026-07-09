@@ -1,0 +1,28 @@
+if ARCH_AK3918AV100
+
+config AK3918AV100
+	bool "Enable AK3918AV100 support"
+
+config ENV_64M
+	bool "Enable 64M ENV support"
+
+config ENV_128M
+	bool "Enable 64M ENV support"
+
+choice
+	prompt "AK3918AV100 board select"
+	optional
+
+	config TARGET_ANYCLOUD_AK3918AV100
+	bool "Support anycloud_ak3918av100"
+	select CPU_ARM926EJS
+	select SUPPORT_SPL
+
+endchoice
+
+config SYS_SOC
+	default "ak3918av100"
+
+source "board/anyka/anycloud_ak3918av100/Kconfig"
+
+endif

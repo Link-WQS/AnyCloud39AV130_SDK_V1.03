@@ -1,0 +1,425 @@
+{
+  "qs_vi_info": [
+    {
+      "qs_vi_dev_info": {
+        "dev_id": 0,
+        "enable": 1,
+        "isp_id": 0,
+        "isp_path": "/tmp/isp.conf",
+        "crop": {
+          "left": 1,
+          "top": 2,
+          "width": 1920,
+          "height": 1080
+        },
+        "frame_rate": 0,
+        "mirror_en": 0,
+        "flip_en": 0,
+        "isp_3dnr_format": 0,
+        "isp_3dnr_info": {
+          "isp_3dnr_total_len": 2300,
+          "isp_3dnr_y_len": 1300,
+          "isp_3dnr_u_len": 350,
+          "isp_3dnr_v_len": 350
+        },
+        "ircut_group_id": 0,
+        "led_group_id": 0,
+        "lumen_group_id": 0,
+        "fastae_info": {
+          "bining_mode": 0,
+          "fastae_mode": 1,
+          "ae_stable_range": 10,
+          "night_mode_light_select": 0,
+          "daynight_threshold": [100, 200],
+          "daynight_master_id": -1,
+          "ae_table_file": "/tmp/ae_table.dat"
+        }
+      },
+      "qs_vi_chn_info": [
+        {
+          "dev_id": 0,
+          "chn_id": 0,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "frame_depth": 1,
+          "data_type": 0,
+          "mode": 1,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_chn_id": 0,
+            "stitch_num": 2,
+            "stitch_index": 0,
+            "stitch_global_id": 0
+          }
+        },
+        {
+          "dev_id": 0,
+          "chn_id": 1,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 640,
+            "height": 360
+          },
+          "frame_depth": 2,
+          "data_type": 0,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 640,
+            "height": 360
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_num": 2,
+            "stitch_index": 0,
+            "stitch_global_id": 1
+          }
+        },
+        {
+          "dev_id": 0,
+          "chn_id": 16,
+          "enable": 0,
+          "frame_rate": 0,
+          "res": {
+            "width": 320,
+            "height": 192
+          },
+          "frame_depth": 1,
+          "data_type": 4,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "stitch_attr": {
+            "stitch_mode": 0,
+            "stitch_num": 0,
+            "stitch_index": 0,
+            "stitch_global_id": 0
+          }
+        }
+      ]
+    },
+    {
+      "qs_vi_dev_info": {
+        "dev_id": 1,
+        "enable": 1,
+        "isp_id": 1,
+        "isp_path": "/tmp/isp2.conf",
+        "crop": {
+          "left": 0,
+          "top": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "frame_rate": 0,
+        "mirror_en": 1,
+        "flip_en": 0,
+        "isp_3dnr_format": 1,
+        "isp_3dnr_info": {
+          "isp_3dnr_total_len": 512,
+          "isp_3dnr_y_len": 0,
+          "isp_3dnr_u_len": 0,
+          "isp_3dnr_v_len": 0
+        },
+        "ircut_group_id": 1,
+        "led_group_id": 1,
+        "lumen_group_id": 1,
+        "fastae_info": {
+          "bining_mode": 1,
+          "fastae_mode": 2,
+          "ae_stable_range": 15,
+          "night_mode_light_select": 1,
+          "daynight_threshold": [150, 250],
+          "daynight_master_id": 0,
+          "ae_table_file": "/tmp/ae_table2.dat"
+        }
+      },
+      "qs_vi_chn_info": [
+        {
+          "dev_id": 1,
+          "chn_id": 2,
+          "enable": 1,
+          "frame_rate": 0,
+          "res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "frame_depth": 1,
+          "data_type": 0,
+          "mode": 1,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_num": 2,
+            "stitch_index": 1,
+            "stitch_global_id": 0
+          }
+        },
+        {
+          "dev_id": 1,
+          "chn_id": 3,
+          "enable": 0,
+          "frame_rate": 0,
+          "res": {
+            "width": 640,
+            "height": 360
+          },
+          "frame_depth": 2,
+          "data_type": 0,
+          "mode": 1,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 1920,
+            "height": 1080
+          },
+          "stitch_attr": {
+            "stitch_mode": 1,
+            "stitch_num": 2,
+            "stitch_index": 1,
+            "stitch_global_id": 1
+          }
+        },
+        {
+          "dev_id": 1,
+          "chn_id": 17,
+          "enable": 0,
+          "frame_rate": 0,
+          "res": {
+            "width": 320,
+            "height": 192
+          },
+          "frame_depth": 1,
+          "data_type": 4,
+          "mode": 0,
+          "crop": {
+            "left": 0,
+            "top": 0,
+            "width": 1920,
+            "height": 1080
+          },
+          "max_res": {
+            "width": 320,
+            "height": 192
+          },
+          "stitch_attr": {
+            "stitch_mode": 0,
+            "stitch_num": 0,
+            "stitch_index": 0,
+            "stitch_global_id": 0
+          }
+        }
+      ]
+    }
+  ],
+  "qs_venc_info": [
+    {
+      "venc_id": 0,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "goplen": 30,
+      "target_kbps": 2048,
+      "max_kbps": 4096,
+      "profile": 1,
+      "br_mode": 1,
+      "initqp": 80,
+      "minqp": 20,
+      "maxqp": 50,
+      "jpeg_qlevel": 80,
+      "chroma_mode": 0,
+      "enc_out_type": 0,
+      "max_picture_size": 0,
+      "enc_level": 0,
+      "smart_mode": 0,
+      "smart_goplen": 0,
+      "smart_quality": 0,
+      "smart_static_value": 0,
+      "gdr_mode": 0,
+      "max_frame_size": 0
+    },
+    {
+      "venc_id": 1,
+      "width": 1280,
+      "height": 720,
+      "fps": 25,
+      "goplen": 25,
+      "target_kbps": 1024,
+      "max_kbps": 2048,
+      "profile": 1,
+      "br_mode": 1,
+      "initqp": 28,
+      "minqp": 22,
+      "maxqp": 52,
+      "jpeg_qlevel": 85,
+      "chroma_mode": 0,
+      "enc_out_type": 0,
+      "max_picture_size": 0,
+      "enc_level": 0,
+      "smart_mode": 0,
+      "smart_goplen": 0,
+      "smart_quality": 0,
+      "smart_static_value": 0,
+      "gdr_mode": 0,
+      "max_frame_size": 0
+    },
+    {
+      "venc_id": 2,
+      "width": 640,
+      "height": 480,
+      "fps": 30,
+      "goplen": 30,
+      "target_kbps": 512,
+      "max_kbps": 1024,
+      "profile": 1,
+      "br_mode": 1,
+      "initqp": 30,
+      "minqp": 25,
+      "maxqp": 55,
+      "jpeg_qlevel": 90,
+      "chroma_mode": 0,
+      "enc_out_type": 0,
+      "max_picture_size": 0,
+      "enc_level": 0,
+      "smart_mode": 0,
+      "smart_goplen": 0,
+      "smart_quality": 0,
+      "smart_static_value": 0,
+      "gdr_mode": 0,
+      "max_frame_size": 0
+    }
+  ],
+  "qs_video_info": [
+    {
+      "chn_id": 24,
+      "venc_id": 0,
+      "frame_rate": 0,
+      "frame_depth": 200,
+      "venc_encode_mode": 1
+    },
+    {
+      "chn_id": 25,
+      "venc_id": 1,
+      "frame_rate": 0,
+      "frame_depth": 200,
+      "venc_encode_mode": 1
+    },
+    {
+      "chn_id": 25,
+      "venc_id": 2,
+      "frame_rate": 1,
+      "frame_depth": 1,
+      "venc_encode_mode": 1
+    }
+  ],
+  "isp_info": [
+    {
+      "isp_id": 0,
+      "isp_path": "/tmp/isp.conf"
+    },
+    {
+      "isp_id": 1,
+      "isp_path": "/tmp/isp2.conf"
+    }
+  ],
+  "ircut": [
+    {
+      "ircut_a_gpio": {
+        "nb": 10,
+        "value": 1
+      },
+      "ircut_b_gpio": {
+        "nb": -1,
+        "value": 0
+      }
+    },
+    {
+      "ircut_a_gpio": {
+        "nb": 11,
+        "value": 1
+      },
+      "ircut_b_gpio": {
+        "nb": -1,
+        "value": 0
+      }
+    }
+  ],
+  "led": [
+    {
+      "ircut_led_type": 0,
+      "irled_gpio": {
+        "nb": 12,
+        "value": 1
+      },
+      "whiteled_type": 0,
+      "whiteled_gpio": {
+        "nb": 13,
+        "value": 1
+      }
+    },
+    {
+      "ircut_led_type": 1,
+      "irled_pwm": {
+        "pwm_id": 0,
+        "duty_ns": 500000,
+        "period_ns": 1000000
+      },
+      "whiteled_type": 1,
+      "whiteled_pwm": {
+        "pwm_id": 1,
+        "duty_ns": 750000,
+        "period_ns": 1000000
+      }
+    }
+  ],
+  "hw_lumi_sensor": [
+    {
+      "ain_index": 0,
+      "daynight_threshold": 1000
+    },
+    {
+      "ain_index": 1,
+      "daynight_threshold": 1500
+    }
+  ]
+}

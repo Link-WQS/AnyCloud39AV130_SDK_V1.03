@@ -1,0 +1,183 @@
+/*
+ * Anycloud37e develop board dts
+ *
+ * Copyright (C) 2020 Anyka(Guangzhou) Microelectronics Technology Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+#include "anycloud_ak37d.dtsi"
+#include "anycloud_ak37d_lcd.dtsi"
+#include "anycloud_ak37d_pinctrl.dtsi"
+
+/ {
+    compatible = "anyka,ak3760d";
+    model = "c500_cbd_ak376xd_dsi_v1.0.0 board";
+    version = "V1.0.00";
+};
+
+&pinctrl {
+    /*
+    * "anyka,function": func index, please refer to dt-bindings/pinctrl/ak_37d_pinctrl.h
+    * "anyka,pull": configuration of the pins
+    * bit[7:0]: pull up/down configuration
+    *     bit[0]: pull up or pull down selection, 1 means select pull down, 0 means select pull up
+    *     bit[4]: pull up or pull down enable, 1 means enable pull up&down function, 0 means disable fuction
+    * !!! Notice that not all pin support pull up and pull down. Please refer to the programer's guide.
+    * bit[15:8]: driver strength configuration.
+    *     bit[9:8] drive strength.
+    * bit[23:16]: input enable configuration
+    *     bit[16]: 1 means enable input, 0 means disable input.
+    * bit[31:24]: pin slew rate configuration
+    *     bit[24]: 1 means enable slew rate, 0 means disable slew rate.
+    * !!! Notice OTHER bits which not mentioned please set to 0.
+    */
+
+    mci1_pins: mci1_pins {
+        anyka,pins = <43 44 45 46 47 48>;
+        anyka,function = <1>;
+        anyka,pull = <0x10010 0x10000 0x10010 0x10010 0x10010 0x10010>; /* 4 line */
+    };
+    
+    mci1_idle_pins:mci1_idle_pins{
+	anyka,pins = <43 44 45 46 47 48>;
+	anyka,function = <0>;
+	anyka,pull = <0x00000>; /* 4 line */
+    };
+	
+	tf_en_pins:tf_en_pins{
+        anyka,pins = <81>;
+	    anyka,function = <0>;
+        anyka,pull = <0x01000310>;
+    };
+
+	ethernet_rmii0_pins: ethernet_rmii0_pins {
+		anyka,pins = <XGPIO_010
+						XGPIO_011
+						XGPIO_013
+						XGPIO_014
+						XGPIO_015
+						XGPIO_019
+						XGPIO_020
+						XGPIO_023
+						XGPIO_024
+						XGPIO_049>;
+		anyka,function = <XGPIO_010_FUNC_RMII_MDC
+							XGPIO_011_FUNC_RMII_MDIO
+							XGPIO_013_FUNC_RMII_TXEN
+							XGPIO_014_FUNC_RMII_TXD0
+							XGPIO_015_FUNC_RMII_TXD1
+							XGPIO_019_FUNC_RMII_RXD0
+							XGPIO_020_FUNC_RMII_RXD1
+							XGPIO_023_FUNC_RMII_RXER
+							XGPIO_024_FUNC_RMII_RXDV
+							XGPIO_049_FUNC_OPCLK
+							>;
+		anyka,pull = <0x01010011 0x01010010 0x01010011 0x01010011 0x01010011 0x01010011 0x01010011 0x01010011 0x01010011 0x01010110>;
+	};
+
+	ethernet_rmii0_rst_pins: ethernet_rmii0_rst_pins {
+		anyka,pins = <XGPIO_080>;
+		anyka,function = <XGPIO_080_FUNC_GPIO80>;
+		anyka,pull = <0x00000010>;
+	};
+	lcd_reset_pins: lcd_reset_pins {
+	    anyka,pins = <83>;
+	    anyka,function = <0>;
+        anyka,pull = <0x01000310>;
+    };
+
+};
+
+&mmc1 {
+	mci_id = <0x1>;  //for mmc id
+    bus-width = <0x4>;
+    max-frequency = <50000000>;
+    /*
+     *  detect mode:
+     *  (1) non-removable;
+     *  (2) detect-gpio/detect-gpios: card detect using gpio
+     *      for example:
+     *      detect-gpio = <&gpio 77 1>;  or detect-gpios = <&gpio 77 1>;  
+     *  (3) cd_clk: card detect using MCLK
+     *  default is non-removable
+     */
+    cd_clk;
+    /* if support highspeed, using cap-sd-highspeed */
+    cap-sd-highspeed;
+    pinctrl-names = "default","idle";
+    pinctrl-0 = <&mci1_pins>,<&tf_en_pins>;
+    pinctrl-1 = <&mci1_idle_pins>;
+    /*
+    * support tf card circuit enable function
+    */
+    power-pins = <&gpio 81 1>;
+    power-inverted;
+    status = "okay";
+};
+
+
+&ethernet {
+    pinctrl-names = "default";
+	pinctrl-0 = <&ethernet_rmii0_pins &ethernet_rmii0_rst_pins>;
+    phy-reset = <&gpio 80 1>;
+	phy-address = <1>;
+
+	status = "okay";
+	    
+};
+
+&uart0 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&uart0_pins>;
+    status = "okay";
+};
+
+&spi0 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&spiflash_pins>;
+    spi-max-frequency = <80000000>;
+    /*
+     * cap-spi-highspeed;
+     * if defined, means high speed controller(Maximum 80M/s);
+     * if not, means normal speed controller(below 60M/s)
+     */
+    cap-spi-highspeed;
+    /* spi flash data bus width:
+        ** 1 means 1 wire mode.
+        ** 2 means 2 wire mode
+        ** 4 means 4 wire mode.
+        ** default: 4 wire mode.
+        **/
+    bus-width = <4>;
+    mode = <3>; /* spi mode selected  */
+    status = "okay";
+};
+
+&lcdc {
+    pinctrl-names = "default";
+    pinctrl-0 = <&lcd_reset_pins>; 
+    reset-pins = <&gpio 83 1>; 
+    lcd-logo-width = <600>;
+    lcd-logo-height = <165>;
+    //[fmt1:fmt0] 00 16bits input(RGB565 or BGR565)
+    //[fmt1:fmt0] 01 24bits input(RGB888 or BGR888)
+    //[fmt1:fmt0] 10 or 11 32bits input(ARGB888 ABGR888 RGBA888 BGRA888)
+    lcd-logo-fmt0 = <1>;
+    lcd-logo-fmt1 = <0>;
+    lcd-logo-rgb-seq = <1>; //0 for BGR, 1 for RGB
+    lcd-fb-type = <1>; //0:single buffer; 1:double buffer
+    status = "okay";
+};
+&sat101at40i28y03{
+    status = "okay";
+};
