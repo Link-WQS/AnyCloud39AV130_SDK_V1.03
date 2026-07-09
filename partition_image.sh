@@ -1,9 +1,12 @@
 #!/bin/bash
 TARGET_DIR="$PWD"
-BOOT_TOOLS=$TARGET_DIR/tools/burntool/boot_tool.bin
-UPGRADE_IMAGE_DIR=$TARGET_DIR/upgrade/platform/
-upgrade_bin_name=$TARGET_DIR/SAT_ANYKA_130L.IMG
+BOOT_TOOLS=$TARGET_DIR/tools/burntool/u-boot_tool_128.bin
+UPGRADE_IMAGE_DIR=$TARGET_DIR/image/
+upgrade_bin_name=$TARGET_DIR/ANYKA_130L.IMG
+uboot_raw_upgrade_name=$TARGET_DIR/ANYKA_130L_UBOOT_RAW.IMG
 upgrade_bin_version=$(date +"%Y%m%d%H%M%S")
+HEADER_ALIGN=64
+UPGRADE_IMAGE_END_MARKER="# <- this is end of image parttion"
 UBOOT_NAME="u-boot.bin"
 ENV_NAME="env_av130_64M_spinor.img"
 ENVBK_NAME="env_av130_64M_spinor.img"
@@ -76,6 +79,10 @@ if [ -e $upgrade_bin_name ]; then
     rm -f $upgrade_bin_name
 fi
 
+if [ -e $uboot_raw_upgrade_name ]; then
+    rm -f $uboot_raw_upgrade_name
+fi
+
 echo "#<upgrade_bin_version=$upgrade_bin_version>" >$upgrade_bin_name
 
 parttion_start_postion=0
@@ -146,10 +153,19 @@ if [ "$data_upgrade" = "y" ]; then
     parttion_start_postion=$((parttion_start_postion + value))
 fi
 
-echo "# <- this is end of image parttion" >>$upgrade_bin_name
+header_size=$(wc -c <"$upgrade_bin_name")
+end_marker_size=$(printf "%s\n" "$UPGRADE_IMAGE_END_MARKER" | wc -c)
+padding_size=$(( (HEADER_ALIGN - ((header_size + end_marker_size) % HEADER_ALIGN)) % HEADER_ALIGN ))
+if [ "$padding_size" -gt 0 ]; then
+    dd if=/dev/zero bs=1 count=$padding_size 2>/dev/null | tr '\000' ' ' >>$upgrade_bin_name
+fi
+printf "%s\n" "$UPGRADE_IMAGE_END_MARKER" >>$upgrade_bin_name
+
 if [ "$uboot_upgrade" = "y" ]; then
     dd if=$BOOT_TOOLS bs=512 count=1 >>$upgrade_bin_name
     dd if=$UPGRADE_IMAGE_DIR$UBOOT_NAME bs=512 skip=1 >>$upgrade_bin_name
+    # dd if=$BOOT_TOOLS bs=512 count=1 >$uboot_raw_upgrade_name
+    # dd if=$UPGRADE_IMAGE_DIR$UBOOT_NAME bs=512 skip=1 >>$uboot_raw_upgrade_name
 fi
 if [ "$env_img_uprade" = "y" ]; then
     dd if=$UPGRADE_IMAGE_DIR$ENV_NAME bs=512 conv=notrunc >>$upgrade_bin_name
@@ -178,4 +194,7 @@ if [ "$data_upgrade" = "y" ]; then
 fi
 
 chmod 777 $upgrade_bin_name
+if [ -e $uboot_raw_upgrade_name ]; then
+    chmod 777 $uboot_raw_upgrade_name
+fi
 sync

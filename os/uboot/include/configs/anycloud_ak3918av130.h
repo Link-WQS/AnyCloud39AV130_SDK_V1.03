@@ -183,8 +183,8 @@
     "update_size=0x0\0" \
     "update=tftp $(loadaddr) $(image_name); sf probe ; sf update $(loadaddr) $(update_offset) $(filesize) \0" \
     "ethaddr=00:55:7b:b5:7d:f7\0" \
-    "ipaddr=192.168.1.99\0" \
-    "serverip=192.168.1.1\0" \
+    "ipaddr=192.168.37.99\0" \
+    "serverip=192.168.37.1\0" \
     "netmask=255.255.255.0\0" \
     "baudrate=115200\0" \
     "console=ttySAK0,115200n8\0" \
@@ -210,6 +210,7 @@
     "uboot_name=UBOOT\0" \
     "parttab_type=AK\0" \
     "setgpio=0\0" \
+    "bootfile=ANYKA_130L.IMG\0" \
     "envup_flags=1\0" \
     "env_version=1.0.01\0" \
     "env_platform=anycloud_ak3918av130\0"
