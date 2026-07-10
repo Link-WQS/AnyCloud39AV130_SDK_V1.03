@@ -566,8 +566,8 @@
 		reg = <0x35>;
 
 		/*0xffff means the gpio is invalid*/
-		reset-gpio = <&gpio XGPIO_019 1>;
-		pwdn-gpio = <&gpio XGPIO_018 1>;
+		reset-gpio = <&gpio XGPIO_019 0>;
+		pwdn-gpio = <&gpio XGPIO_018 0>;
 
 		port {
 			sensor0_0: endpoint@0 {

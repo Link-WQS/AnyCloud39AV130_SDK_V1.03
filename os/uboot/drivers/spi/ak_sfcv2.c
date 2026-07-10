@@ -684,12 +684,12 @@ void norflash_trans_param(T_FLASH_PARAM *flash_trans_param)
 bool sfc_intr_check(unsigned int intr_singal, T_SFC_INTR_WAIT intr_wait_sele)
 {
     unsigned int cnt = ERROR_DELAY;
+    unsigned int status;
 
     while(1)
     {
-        /*if((sfc_intr_flag & intr_singal) == intr_singal)
-            break;*/
-        if((REG32(SFC_STATUS_REG) & intr_singal) == intr_singal)
+        status = REG32(SFC_STATUS_REG);
+        if((status & intr_singal) == intr_singal)
         {
             REG32(SFC_STATUS_REG) |= intr_singal;
             break;
@@ -698,16 +698,16 @@ bool sfc_intr_check(unsigned int intr_singal, T_SFC_INTR_WAIT intr_wait_sele)
             return false;
         if(--cnt <= 0)
         {
+            // 【修改1】打印当前正在等待的信号以及硬件状态寄存器的实时值
+            printf("\n[SFC_ERR] Timeout waiting for signal 0x%x! SFC_STATUS_REG = 0x%08x\n", intr_singal, status);
             printf("wait too long for an interrupt!!!");
             printf("input 'e' to exit,no input to continue wait.\n");
             cnt = ERROR_DELAY;
         }
-        // if('e' == getch_no_wait())
-        //     return false;
     }
-    // sfc_clean_intr_flag(intr_singal);//tiaoshi
     return true;
 }
+
 
 /**
  * @brief  spi intr enable
@@ -1189,21 +1189,19 @@ void sfc_spi_write_read_cpu(unsigned char **p_buf, unsigned int cmd_bank_sum)
 {
     unsigned int i, j, l;
     unsigned int reg_val = 0;
-    unsigned int thres_cnt;
-    unsigned int frac_thres_cnt;
+    unsigned int total_bytes;
+    unsigned int words;
+    unsigned int rem_bytes;
     unsigned int tmp = false;
     unsigned int rx_thres;
     unsigned int tx_thres;
 
     sfc_fifo_clear();
     sfc_get_fifo_thres(&rx_thres, &tx_thres);
-//    sfc_intr_enable(SFC_TRANS_DONE_STATUS);
-   // dump_cmdbank(1, cmd_bank_sum+1); //tiaoshi
+
     for(i = 0; i <= cmd_bank_sum; i++)
     {
-        //不使用FIFO的data phase需要先放进寄存器
         if(sfc_trans_attribute(true, WRITE_FLASH, i)){
-            // printf("tiaoshi $$$$$$$$$ fun:%s line:%d i = %d\n", __func__, __LINE__, i);
             REG32(SFC_DATA_PHASE_REG(i)) = (p_buf[i][0] | p_buf[i][1]<<8 | p_buf[i][2]<<16 | p_buf[i][3]<<24);
         }
     }
@@ -1213,40 +1211,41 @@ void sfc_spi_write_read_cpu(unsigned char **p_buf, unsigned int cmd_bank_sum)
     {
         if(sfc_trans_attribute(false, WRITE_FLASH, i))
         {
-            thres_cnt = sfc_get_trans_data_cnt(i) / ((SFC_TXFIFO_SIZE - tx_thres) * 4);
-            frac_thres_cnt = sfc_get_trans_data_cnt(i) % ((SFC_TXFIFO_SIZE - tx_thres) * 4);
-            // printf("tiaoshi ########## fun:%s line:%d i = %d thres_cnt = %d frac_thres_cnt = %d\n", __func__, __LINE__, i, thres_cnt, frac_thres_cnt);
-            for(j = 0; j < thres_cnt; j++)
+            total_bytes = sfc_get_trans_data_cnt(i);
+            words = total_bytes / 4;
+            rem_bytes = total_bytes % 4;
+
+            for(l = 0; l < words; l++)
             {
-                while(!(REG32(SFC_STATUS_REG) & SFC_TXFIFO_THRES_STATUS));    //等待FIFO阈值
-                for(l = 0; l < SFC_TXFIFO_SIZE - tx_thres; l++)
-                {
-                    REG32(SFC_DATA_FIFO_REG) = (p_buf[i][0] | p_buf[i][1]<<8 | p_buf[i][2]<<16 | p_buf[i][3]<<24);
-                    p_buf[i] += 4;
-                }
+				// 【修改2】
+                // 等待 FIFO 有空间
+                while(!(REG32(SFC_STATUS_REG) & SFC_TXFIFO_THRES_STATUS));
+                // 写入一个字
+                REG32(SFC_DATA_FIFO_REG) = (p_buf[i][0] | p_buf[i][1]<<8 | p_buf[i][2]<<16 | p_buf[i][3]<<24);
+                p_buf[i] += 4;
+                /* 1us 的延时可以让硬件有充足的时间将 FIFO 中的数据发送到 SPI 总线上。
+                 * 这样 FIFO 内的数据永远保持在安全水位，100% 避免由于硬件状态位同步延迟导致的溢出死锁。
+                 */
+                udelay(1); 
             }
 
-            if(frac_thres_cnt)
+            if(rem_bytes)
             {
-                while(!(REG32(SFC_STATUS_REG) & SFC_TXFIFO_THRES_STATUS));    //等待FIFO阈值
-                for(l = 0; l < frac_thres_cnt / 4; l++)
-                {
-                    REG32(SFC_DATA_FIFO_REG) = (p_buf[i][0] | p_buf[i][1]<<8 | p_buf[i][2]<<16 | p_buf[i][3]<<24);
-                    p_buf[i] += 4;
-                }
-                for(j = 0; j < frac_thres_cnt % 4; j++)
+                reg_val = 0;
+                for(j = 0; j < rem_bytes; j++)
                 {
                     reg_val |= (*(p_buf[i]) << (j * 8));
                     p_buf[i]++;
                 }
-                if(frac_thres_cnt % 4 != 0)
-                    REG32(SFC_DATA_FIFO_REG) = reg_val;
+                while(!(REG32(SFC_STATUS_REG) & SFC_TXFIFO_THRES_STATUS));
+                REG32(SFC_DATA_FIFO_REG) = reg_val;
+                udelay(1);
             }
         }
         else if(sfc_trans_attribute(false, READ_FLASH, i))
         {
-            thres_cnt = sfc_get_trans_data_cnt(i) / (rx_thres * 4);
-            frac_thres_cnt = sfc_get_trans_data_cnt(i) % (rx_thres * 4);
+            unsigned int thres_cnt = sfc_get_trans_data_cnt(i) / (rx_thres * 4);
+            unsigned int frac_thres_cnt = sfc_get_trans_data_cnt(i) % (rx_thres * 4);
             for(j = 0; j < thres_cnt; j++)
             {
                 while(!(REG32(SFC_STATUS_REG) & SFC_RXFIFO_THRES_STATUS));    //等待FIFO阈值
@@ -1279,9 +1278,9 @@ void sfc_spi_write_read_cpu(unsigned char **p_buf, unsigned int cmd_bank_sum)
         }
     }
 
-    //等待SCMT传输结束再读取数据
-    if(tmp == false)
+    if(tmp == false) {
         sfc_intr_check(SFC_TRANS_DONE_STATUS, WAIT_INTR);
+    }
 
     for(i = 0; i <= cmd_bank_sum; i++)
     {
@@ -1291,7 +1290,6 @@ void sfc_spi_write_read_cpu(unsigned char **p_buf, unsigned int cmd_bank_sum)
             memcpy(p_buf[i], &reg_val, sizeof(reg_val));
         }
     }
-//    sfc_intr_disable(SFC_TRANS_DONE_STATUS);
 }
 
 /**
@@ -1896,9 +1894,7 @@ void _norflash_read_data(unsigned int address , unsigned char *des_buf, unsigned
 
 void norflash_read_data(unsigned int address , unsigned char *des_buf, unsigned int count, unsigned char flash_cmd_code)
 {
-    //int i;
-    unsigned int offset = 0, count1; // count_old = count;
-    T_SFC_TRANS_DATA_PATH data_path1;
+    unsigned int offset = 0, count1;
 
     if (flash_param.data_path == CPU_MODE) {
         _norflash_read_data(address+offset, des_buf+offset, count, flash_cmd_code);
@@ -1920,14 +1916,16 @@ void norflash_read_data(unsigned int address , unsigned char *des_buf, unsigned 
             offset += count1;
             count -= count1;
         }
-        if (count) {
-            data_path1 = flash_param.data_path;
-            flash_param.data_path = CPU_MODE;
-            _norflash_read_data(address+offset, des_buf+offset, count, flash_cmd_code);
-            flash_param.data_path = data_path1;
+        // 【修改3】使用 EDMA 强制读取 64 字节，避开 CPU 模式死锁
+        if (count > 0) {
+            unsigned char tmp_buf[64] __attribute__((aligned(64)));
+            _norflash_read_data(address+offset, tmp_buf, 64, flash_cmd_code);
+            memcpy(des_buf+offset, tmp_buf, count);
         }
     }
 }
+
+
 
 /**
  * @brief  spi flash program data
@@ -1938,98 +1936,55 @@ void norflash_read_data(unsigned int address , unsigned char *des_buf, unsigned 
  * @return
  * @note   flash编程数据
  */
+
+// 【修改4】
+static void sfc_write_dispatch(unsigned int addr, const unsigned char *buf, unsigned int len, unsigned int wire_mode)
+{
+    if (wire_mode == WIRE8)
+        norflash_octla_page_program(addr, (unsigned char *)buf, len);
+    else if (wire_mode == WIRE4)
+        norflash_quad_page_program(addr, (unsigned char *)buf, len);
+    else
+        norflash_page_program(addr, (unsigned char *)buf, len);
+}
+
+static void safe_page_program(unsigned int address, const unsigned char *src_buf, unsigned int count, unsigned int wire_mode)
+{
+    // 声明 256 字节最大页大小、且 64 字节对齐的临时安全缓存
+    unsigned char pad_buf[256] __attribute__((aligned(64)));
+    
+    // 计算 64 字节对齐的物理起始地址
+    unsigned int aligned_addr = address - (address % 64);
+    unsigned int offset = address % 64;
+    
+    // 计算从对齐地址开始的传输总长度，并向上舍入到 64 字节的倍数
+    unsigned int total_len = offset + count;
+    unsigned int dma_len = ((total_len + 63) / 64) * 64;
+    
+    norflash_read_data(aligned_addr, pad_buf, dma_len, FLASH_CMD_READ);
+    memcpy(pad_buf + offset, src_buf, count);
+    sfc_write_dispatch(aligned_addr, pad_buf, dma_len, wire_mode);
+}
+
 void norflash_program_data(unsigned int address, unsigned char *src_buf, unsigned int count, unsigned int wire_mode)
 {
-    T_SFC_TRANS_DATA_PATH data_path;
-    unsigned int page_addr = address%PAGE_SIZE;
-    unsigned int tran_cnt;
-    unsigned int i = 0;
-    unsigned int count1;
-    unsigned int frac_count;
+    unsigned int page_rem, chunk_sz;
 
-    // printf("tiaoshi norflash_program_data address = %d count:%d wire_mode:%d\n", address, count, wire_mode);
-    if(page_addr + count <= PAGE_SIZE)
-    {
-        count1 = count - count % 64;
-        frac_count = count % 64;
-        if(wire_mode == WIRE8)
-            norflash_octla_page_program(address, src_buf, count1);
-        else if(wire_mode == WIRE4)
-            norflash_quad_page_program(address, src_buf, count1);
-        else if(wire_mode == WIRE1)
-            norflash_page_program(address, src_buf, count1);
+    while (count > 0) {
+        // 计算当前页内剩余的字节数
+        page_rem = PAGE_SIZE - (address % PAGE_SIZE);
+        // 本次最大只能写入到页边界
+        chunk_sz = (count > page_rem) ? page_rem : count;
 
-        if (frac_count) {
-            data_path = flash_param.data_path;
-            flash_param.data_path = CPU_MODE;
-            if(wire_mode == WIRE8)
-                norflash_octla_page_program(address, src_buf, frac_count);
-            else if(wire_mode == WIRE4)
-                norflash_quad_page_program(address, src_buf, frac_count);
-            else if(wire_mode == WIRE1)
-                norflash_page_program(address, src_buf, frac_count);
-            flash_param.data_path = data_path;
-        }
-    }
-    else
-    {
-        do
-        {
-            if(i == 0)
-            {
-                tran_cnt = PAGE_SIZE-page_addr;
-                count1 = tran_cnt - tran_cnt % 64;
-                frac_count = tran_cnt % 64;
-                // printf("flash addr = 0x%x,buf addr = 0x%x, cnt = %d\n",address + i, src_buf + i, tran_cnt);
-                if(wire_mode == WIRE8)
-                    norflash_octla_page_program(address + i, src_buf + i, count1);
-                else if(wire_mode == WIRE4)
-                    norflash_quad_page_program(address + i, src_buf + i, count1);
-                else if(wire_mode == WIRE1)
-                    norflash_page_program(address + i, src_buf + i, count1);
-                i += count1;
-                if (frac_count) {
-                    data_path = flash_param.data_path;
-                    flash_param.data_path = CPU_MODE;
-                    if(wire_mode == WIRE8)
-                        norflash_octla_page_program(address + i, src_buf + i, frac_count);
-                    else if(wire_mode == WIRE4)
-                        norflash_quad_page_program(address + i, src_buf + i, frac_count);
-                    else if(wire_mode == WIRE1)
-                        norflash_page_program(address + i, src_buf + i, frac_count);
-                    flash_param.data_path = data_path;
-                    i += frac_count;
-                }
-            }
+        // 调用高可靠页内安全写入函数
+        safe_page_program(address, src_buf, chunk_sz, wire_mode);
 
-            tran_cnt = count - i;
-            if(tran_cnt > PAGE_SIZE)
-                tran_cnt = PAGE_SIZE;
-            // printf("flash addr = 0x%x,buf addr = 0x%x, cnt = %d\n",address + i, src_buf + i, tran_cnt);
-            count1 = tran_cnt - tran_cnt % 64;
-            frac_count = tran_cnt % 64;
-            if(wire_mode == WIRE8)
-                norflash_octla_page_program(address + i, src_buf + i, count1);
-            else if(wire_mode == WIRE4)
-                norflash_quad_page_program(address + i, src_buf + i, count1);
-            else if(wire_mode == WIRE1)
-                norflash_page_program(address + i, src_buf + i, count1);
-            i += count1;
-            if (frac_count) {
-                data_path = flash_param.data_path;
-                flash_param.data_path = CPU_MODE;
-                if(wire_mode == WIRE8)
-                    norflash_octla_page_program(address + i, src_buf + i, frac_count);
-                else if(wire_mode == WIRE4)
-                    norflash_quad_page_program(address + i, src_buf + i, frac_count);
-                else if(wire_mode == WIRE1)
-                    norflash_page_program(address + i, src_buf + i, frac_count);
-                flash_param.data_path = data_path;
-                i += frac_count;
-            }
-        }while(i < count);
+        address += chunk_sz;
+        src_buf += chunk_sz;
+        count -= chunk_sz;
     }
 }
+
 
 void sfcv2_set_parm(unsigned int max_hz)
 {
