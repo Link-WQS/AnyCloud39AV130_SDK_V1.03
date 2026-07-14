@@ -20,6 +20,10 @@
 *.symvers
 *.d
 *.tmp
+!rootfs/resource/etc/init.d/
+!rootfs/resource/etc/init.d/**
+!rootfs/rootfs/etc/init.d/
+!rootfs/rootfs/etc/init.d/**
 
 # Directory-scoped object files that are clearly sample/build leftovers.
 /platform/sample/**/*.o

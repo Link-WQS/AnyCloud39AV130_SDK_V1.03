@@ -175,8 +175,8 @@
     };
 
     door_led_pin: door_led_pin {
-        anyka,pins = <XGPIO_065>;
-        anyka,function = <XGPIO_065_FUNC_GPIO65>;
+        anyka,pins = <XGPIO_026>;
+        anyka,function = <XGPIO_026_FUNC_GPIO26>;
         anyka,pull = <0x10>;
     };
 
@@ -356,8 +356,8 @@
     };
 
     speaker_en_pins: speaker_en_pins {
-        anyka,pins = <XGPIO_037>;
-        anyka,function = <XGPIO_037_FUNC_GPIO37>;
+        anyka,pins = <XGPIO_098>;
+        anyka,function = <XGPIO_098_FUNC_GPIO98>;
         anyka,pull = <0x00808000>;
     };
 
@@ -404,14 +404,14 @@
     };
 
     pwm3_pins: pwm3_pins {
-        anyka,pins = <XGPIO_055>;
-        anyka,function = <XGPIO_055_FUNC_PWM3>;
+        anyka,pins = <XGPIO_068>;
+        anyka,function = <XGPIO_068_FUNC_PWM3>;
         anyka,pull = <0x1000010>;
     };
 
     pwm3_pins_idle: pwm3_pins_idle {
-        anyka,pins = <XGPIO_055>;
-        anyka,function = <XGPIO_055_FUNC_GPIO55>;
+        anyka,pins = <XGPIO_068>;
+        anyka,function = <XGPIO_068_FUNC_GPIO68>;
         anyka,pull = <0x00808000>;
     };
 
@@ -461,8 +461,8 @@
     };
 
     spi2_pins: spi2_pins {
-        anyka,pins = <XGPIO_056 XGPIO_010 XGPIO_055>;
-        anyka,function = <XGPIO_056_FUNC_SPI2_CLK XGPIO_010_FUNC_SPI2_DOUT XGPIO_055_FUNC_SPI2_CS0>;
+        anyka,pins = <XGPIO_066 XGPIO_069 XGPIO_065>;
+        anyka,function = <XGPIO_066_FUNC_SPI2_CLK XGPIO_069_FUNC_SPI2_DOUT XGPIO_065_FUNC_SPI2_CS0>;
         anyka,pull = <0x00010000>;
     };
     
@@ -478,6 +478,11 @@
         anyka,pull = <0x00010010>;
     };
     
+    rfid_pins:rfid_pins{
+	anyka,pins = <XGPIO_058>;
+	anyka,function = <XGPIO_058_FUNC_GPIO58>;
+	anyka,pull = <0x00010001>;
+    };
 };
 
 &uart0 {
@@ -522,12 +527,12 @@
     status = "okay";
 
 	csi_mipi_lane_swap = <
-		SENSOR_D0	//L0
-		SENSOR_C0	//L1
-		SENSOR_D1	//L2
-        SENSOR_D2   //L3
-        SENSOR_D3   //L4
-        SENSOR_C1   //L5
+        SENSOR_C0    // L0
+        SENSOR_D0    // L1
+        SENSOR_D1    // L2
+        SENSOR_D2    // L3
+        SENSOR_C1    // L4
+        SENSOR_D3    // L5
 		>;//MIPI_RX_L0~2.
 	csi_mipi_dndp_swap = <
 		MIPI_DNDP_NOSWAP	//L0
@@ -659,7 +664,7 @@
 
     door_led {
         label = "door_led";
-        gpios = <&gpio XGPIO_065 GPIO_ACTIVE_HIGH>;
+        gpios = <&gpio XGPIO_026 GPIO_ACTIVE_HIGH>;
         default-state = "off";
     };
 
@@ -943,7 +948,7 @@
 &adc_dac {
     pinctrl-names = "default";
     pinctrl-0 = <&speaker_en_pins>;
-    speak-gpios = <&gpio XGPIO_037 1>;
+    speak-gpios = <&gpio XGPIO_098 1>;
     pd-hpvcm = <1>;
     /*
     * The level of speak-gpios votage for power on audio: 0=low, 1=high
@@ -1025,14 +1030,14 @@
      * 0: To disable BAT voltage divider.
      * 1: To enable BAT voltage divider divided by 2.
      */
-    battery-divider = <1>;
+    battery-divider = <0>;
 
     /*
      * Sampling number
      * 	Read the sampling data for N times and then calculate the average value.
      * 	N ranges from 1 to 7.
      */
-    sampling-num = <3>;
+    sampling-num = <7>;
     status = "okay";
 };
 
@@ -1077,7 +1082,7 @@
 	period-ns = <500>;
 	duty-ns = <250>;
 	pwm-enable = <1>;
-	status = "disable";
+	status = "enable";
 };
 
 &pwm4 {
@@ -1164,8 +1169,13 @@
      * if not, means normal speed controller(below 50M/s)
      */
     /* cap-spi-highspeed; */
-    status =  "disable";//注意&leds和&uart2的引脚冲突
+    status =  "enable";//注意&leds和&uart2的引脚冲突
 
+    rfid_rc522@00{
+        compatible = "rfid,rfid_rc522";
+        reg = <0>;  /* CS #0 */
+        spi-max-frequency = <8000000>;
+    };
 
 #if 0
     ili9341@0{
@@ -1196,4 +1206,11 @@
 #endif
 
 
+};
+
+&rfid_control{
+    gpios = <&gpio 58 1>;
+    pinctrl-names ="default";
+    pinctrl-0 = <&rfid_pins>;
+    status = "enable";
 };

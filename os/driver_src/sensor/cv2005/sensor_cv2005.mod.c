@@ -26,4 +26,4 @@ __attribute__((section(".modinfo"))) =
 MODULE_ALIAS("of:N*T*Canyka,sensor0*");
 MODULE_ALIAS("i2c:cv2005");
 
-MODULE_INFO(srcversion, "D3E3E897355316C7014C3CB");
+MODULE_INFO(srcversion, "DD7544C1B7892DBB8A219D5");

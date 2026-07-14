@@ -755,6 +755,11 @@
         status = "disable";
     };
 
+    rfid_control: rfid_control {
+        compatible = "leo_rfid_control";
+        status = "disable";
+    };
+    
     clocks {
           osc24M: osc24M {
             compatible = "fixed-clock";

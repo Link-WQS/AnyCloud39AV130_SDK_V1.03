@@ -90,7 +90,7 @@ static int SENSOR_I2C_ADDR = 0x35;	        //write:0x6a, read:0x6b
 #define MIPI_MHZ				390
 #define MIPI_LANES				2
 //#define MAX_FPS					30
-static int MAX_FPS = 20;
+static int MAX_FPS = 30;
 
 #if defined(CONFIG_MACH_AK39EV330) || defined(CONFIG_MACH_AK37D) /*H3B&H3D*/
 #define EXP_EFFECT_FRAMES		1	/*adjust exp_time for 1/2 frames*/

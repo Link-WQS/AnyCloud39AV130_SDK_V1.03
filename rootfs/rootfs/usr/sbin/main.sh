@@ -89,6 +89,10 @@ ifconfig eth0 up
 # 	/bin/mount -t yaffs2 $partition_data /data
 # fi
 
+insmod /usr/modules/ak_isp.ko
+insmod /usr/modules/sensor_cv2005.ko check_id=1
+insmod /usr/modules/ak_saradc.ko
+
 #start system service
 /usr/sbin/service.sh start &
 
