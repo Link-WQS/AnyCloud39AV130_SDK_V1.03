@@ -15,7 +15,7 @@
 
 #ifndef	CONFIG_ARP_TIMEOUT
 /* Milliseconds before trying ARP again */
-# define ARP_TIMEOUT		5000UL
+# define ARP_TIMEOUT		1000UL
 #else
 # define ARP_TIMEOUT		CONFIG_ARP_TIMEOUT
 #endif

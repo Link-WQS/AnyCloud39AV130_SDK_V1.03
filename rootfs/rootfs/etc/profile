@@ -8,7 +8,7 @@
 
 # Set search library path and user path
 LD_LIBRARY_PATH=/lib:/usr/lib
-PATH=/bin:/sbin:/usr/bin:/usr/sbin
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/app/:/tmp/usr/bin/
 export LD_LIBRARY_PATH PATH
 
 #host name
