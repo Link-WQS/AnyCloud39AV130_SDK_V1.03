@@ -412,7 +412,7 @@
     pwm3_pins_idle: pwm3_pins_idle {
         anyka,pins = <XGPIO_068>;
         anyka,function = <XGPIO_068_FUNC_GPIO68>;
-        anyka,pull = <0x00808000>;
+        anyka,pull = <0x10000010>;
     };
 
     pwm4_pins: pwm4_pins {
@@ -686,7 +686,7 @@
     pinctrl-1 = <&mci1_idle_pins>; 
     power-pins = <&gpio XGPIO_050 1>; 
     power-inverted;
-    status = "okay"; 
+    status = "disable"; 
 };
 
 /* mmc1 card detect using cd_clk */
@@ -1076,13 +1076,12 @@
 };
 
 &pwm3 {
-	pinctrl-names = "default", "idle";
+	pinctrl-names = "default";
     pinctrl-0 = <&pwm3_pins>;
-    pinctrl-1 = <&pwm3_pins_idle>;
-	period-ns = <500>;
-	duty-ns = <250>;
+	period-ns = <8000>;
+	duty-ns = <4000>;
 	pwm-enable = <1>;
-	status = "enable";
+	status = "okay";
 };
 
 &pwm4 {
@@ -1176,41 +1175,11 @@
         reg = <0>;  /* CS #0 */
         spi-max-frequency = <8000000>;
     };
-
-#if 0
-    ili9341@0{
-        pinctrl-names = "default";
-        /* pinctrl-0 = <&spi1_reset_pins &spi1_dc_pins &spi1_led_pins>; */
-        pinctrl-0 = <&spi2_reset_pins &spi2_dc_pins>;
-        compatible = "ilitek,ili9341";
-        spi-max-frequency = <50000000>;
-        reg = <0>;
-        status = "okay";
-  
-        dc-gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
-        reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
-        /* led-gpios = <&gpio 98 GPIO_ACTIVE_HIGH>; */
-  
-        spi-cpol;
-        spi-cpha;
-  
-        width = <240>;
-        height = <320>;
-        bgr = <1>;
-        buswidth = <8>;
-        regwidth = <8>;
-        rotate = <0>;
-        fps = <30>;
-        debug = <0>;
-    };
-#endif
-
-
 };
 
 &rfid_control{
     gpios = <&gpio 58 1>;
     pinctrl-names ="default";
     pinctrl-0 = <&rfid_pins>;
-    status = "enable";
+    status = "okay";
 };

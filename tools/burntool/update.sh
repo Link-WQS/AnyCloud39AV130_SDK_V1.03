@@ -4,8 +4,8 @@
 # Description:      update uImage&rootfs under /tmp|/mnt|...
 # Author:            xc
 
-
 touch /tmp/proc_value       # 创建一个用于传递升级进度的文件
+/tmp/upgrade_progress 11 0 &   # 启动 进度条显示程序
 
 CM_NORMAL=0
 CM_BOLD=1
@@ -62,7 +62,7 @@ CMD_GETTY=$DIR_ROOT_TMP/sbin/getty
 CMD_SLEEP=$DIR_ROOT_TMP/bin/sleep
 CMD_REBOOT="$DIR_ROOT_TMP/sbin/reboot -f"
 
-FILE_ENV="env_av100_64M.img"
+FILE_ENV="env_ak3761e_nor.img"
 FILE_DTB="EVB_CBDM_AK3918AV130L_V1.0.0.dtb"
 FILE_KERNEL="uImage"
 FILE_LOGO="anyka_logo.rgb"
@@ -70,7 +70,8 @@ FILE_ROOT="root.sqsh4"
 FILE_ETC="usr.jffs2"
 FILE_USR="usr.sqsh4"
 FILE_APP="app.sqsh4"
-FILE_DAEMON="daemon.sqsh4"
+FILE_TUYA="tuya.jffs2"
+FILE_DATA="data.jffs2"
 
 PARTITION_ENV="ENV"
 PARTITION_BKENV="ENVBK"
@@ -83,7 +84,6 @@ PARTITION_USR="USR"
 PARTITION_APP="APP"
 PARTITION_TUYA="TUYA"
 PARTITION_DATA="DATA"
-PARTITION_DAEMON="DAEMON"
 
 BUSYBOX_TAR="busybox.tar"
 
@@ -103,7 +103,7 @@ update_voice_tip()
 check_files()
 {
     echo "check update image"
-    for target in ${FILE_ENV} ${FILE_DTB} ${FILE_KERNEL} ${FILE_LOGO} ${FILE_ROOT} ${FILE_ETC} ${FILE_USR} ${FILE_APP} ${FILE_TUYA} ${FILE_DATA} ${FILE_DAEMON}
+    for target in ${FILE_ENV} ${FILE_DTB} ${FILE_KERNEL} ${FILE_LOGO} ${FILE_ROOT} ${FILE_ETC} ${FILE_USR} ${FILE_APP} ${FILE_TUYA} ${FILE_DATA}
     do
         if [ -e ${DIR_UPDATE}/${target} ]; then
             echo "############ find a target ${target}, update in ${DIR_UPDATE} ############"
@@ -153,7 +153,7 @@ check_file_md5( )                                                               
 
 move_tmp_dir_files()                                                            #将tmp目录的升级文件移动到reserve目录
 {
-    for target in ${FILE_ENV} ${FILE_DTB} ${FILE_KERNEL} ${FILE_LOGO} ${FILE_ROOT} ${FILE_ETC} ${FILE_USR} ${FILE_APP} ${FILE_TUYA} ${FILE_DATA} ${FILE_TAR_GZ} ${FILE_DAEMON}
+    for target in ${FILE_ENV} ${FILE_DTB} ${FILE_KERNEL} ${FILE_LOGO} ${FILE_ROOT} ${FILE_ETC} ${FILE_USR} ${FILE_APP} ${FILE_TUYA} ${FILE_DATA} ${FILE_TAR_GZ}
     do
         if [ -e ${DIR_TMP}/${target} ]; then
             echo "MOVE ${target} => ${DIR_RESERVE}"
@@ -185,7 +185,7 @@ get_update_dir()
 {
     for dir in ${DIR_RESERVE} ${DIR_MNT} ${DIR_OPTION}
     do
-        for target in ${FILE_ENV} ${FILE_DTB} ${FILE_KERNEL} ${FILE_LOGO} ${FILE_ROOT} ${FILE_ETC} ${FILE_USR} ${FILE_APP} ${FILE_TUYA} ${FILE_DATA} ${FILE_TAR_GZ} ${FILE_DAEMON}
+        for target in ${FILE_ENV} ${FILE_DTB} ${FILE_KERNEL} ${FILE_LOGO} ${FILE_ROOT} ${FILE_ETC} ${FILE_USR} ${FILE_APP} ${FILE_TUYA} ${FILE_DATA} ${FILE_TAR_GZ}
         do
             #echo "check ${dir}/${target}"
             if [ -e ${dir}/${target} ]; then
@@ -335,6 +335,7 @@ killall -9 klogd
 killall -9 tcpsvd
 killall -9 udhcpc
 killall -9 ftpd
+killall -9 ANYKA37E.BIN
 kill_proc "/usr"                                                                #关闭所有ps里面带 "/usr"关键字的进程kill掉
 
 echo "mkdir -p $DIR_ROOT_TMP"
@@ -406,40 +407,38 @@ $CMD_ECHO "############ START UPDATE. #############"
 if [ -e ${DIR_UPDATE}/$FILE_ETC ]; then
 $CMD_ECHO "############ NMONT CONFIG. #############"
 /usr/bin/fuser -km /etc/config
-while ps aux | grep "/etc/config/" | grep -v "grep" > /dev/null; do 
-    sleep 1 # 等待一秒钟再次检查
-done
+# while ps aux | grep "/etc/config/" | grep -v "grep" > /dev/null; do 
+#     sleep 1 # 等待一秒钟再次检查
+# done
 $CMD_ECHO -e "\e["$CM_NORMAL";"$CF_BLUE";"$CB_BLACK"m""$CMD_UMONT /etc/config""\e[0m"
-$CMD_UMONT /etc/config
+$CMD_UMONT  -lf /etc/config
 fi
 
 if [ -e ${DIR_UPDATE}/$FILE_APP ]; then
 $CMD_ECHO "############ NMONT APP. #############"
-/usr/bin/fuser -km /app/ &
+# /usr/bin/fuser -km /app/app/ &
 sleep 3
-
-$CMD_ECHO -e "\e["$CM_NORMAL";"$CF_BLUE";"$CB_BLACK"m""$CMD_UMONT /app/""\e[0m"
-$CMD_UMONT /app/
+$CMD_ECHO -e "\e["$CM_NORMAL";"$CF_BLUE";"$CB_BLACK"m""$CMD_UMONT /app/app""\e[0m"
+$CMD_UMONT -lf /app/app/
 fi
 
-if [ -e ${DIR_UPDATE}/${FILE_DAEMON} ]; then
-$CMD_ECHO "############ NMONT DARMON. #############"
-/usr/bin/fuser -km /daemon/ &
-sleep 3
-
-$CMD_ECHO -e "\e["$CM_NORMAL";"$CF_BLUE";"$CB_BLACK"m""$CMD_UMONT /daemon/""\e[0m"
-$CMD_UMONT /daemon/
-fi
+# 这个分区存在涂鸦文件。所以不升级
+# if [ -e ${DIR_UPDATE}/$FILE_DATA ]; then
+# $CMD_ECHO "############ NMONT DATA. #############"
+# # /usr/bin/fuser -km /app/data
+# $CMD_ECHO -e "\e["$CM_NORMAL";"$CF_BLUE";"$CB_BLACK"m""$CMD_UMONT /app/data""\e[0m"
+# $CMD_UMONT  -lf /app/data
+# fi
 
 # 这一段卸载需要放到最后，因为杀死fuser在usr下，不能卸载usr文件系统，否则导致上面文件系统卸载都无法使用fuser命令
 if [ -e ${DIR_UPDATE}/$FILE_USR ]; then
 $CMD_ECHO "############ NMONT USR. #############"
 /usr/bin/fuser -km /usr
-while ps aux | grep "/usr/" | grep -v "grep" > /dev/null; do 
-    sleep 1 # 等待一秒钟再次检查
-done
+# while ps aux | grep "/usr/" | grep -v "grep" > /dev/null; do 
+#     sleep 1 # 等待一秒钟再次检查
+# done
 $CMD_ECHO -e "\e["$CM_NORMAL";"$CF_BLUE";"$CB_BLACK"m""$CMD_UMONT /usr""\e[0m"
-$CMD_UMONT /usr
+$CMD_UMONT  -lf /usr
 fi
 #$CMD_WATCH -n 1 $CMD_PS&
 #killall -9 getty
@@ -456,15 +455,26 @@ dd_update $FILE_DTB    $PARTITION_DTB
 echo 3 > /tmp/proc_value
 dd_update $FILE_KERNEL $PARTITION_KERNEL
 echo 4 > /tmp/proc_value
-dd_update $FILE_ETC    $PARTITION_ETC
+dd_update $FILE_LOGO   $PARTITION_LOGO
 echo 5 > /tmp/proc_value
-dd_update $FILE_USR    $PARTITION_USR
+dd_update $FILE_ETC    $PARTITION_ETC
 echo 6 > /tmp/proc_value
-dd_update $FILE_APP    $PARTITION_APP
+dd_update $FILE_USR    $PARTITION_USR
 echo 7 > /tmp/proc_value
-dd_update $FILE_ROOT   $PARTITION_ROOT
+dd_update $FILE_APP    $PARTITION_APP
 echo 8 > /tmp/proc_value
-dd_update $FILE_DAEMON   $PARTITION_DAEMON
+dd_update $FILE_TUYA   $PARTITION_TUYA
+echo 9 > /tmp/proc_value
+dd_update $FILE_DATA   $PARTITION_DATA
+echo 10 > /tmp/proc_value
+dd_update $FILE_ROOT   $PARTITION_ROOT
+echo 11 > /tmp/proc_value
+
+
+$CMD_ECHO 34 > /sys/class/gpio/export
+$CMD_ECHO 1 > /sys/class/gpio/gpio34/value
+$CMD_SLEEP 1
+
 
 if [ "$DD_UPDATE" = 1 ];then
     if [ -n "$1" ]; then

@@ -756,7 +756,7 @@
     };
 
     rfid_control: rfid_control {
-        compatible = "leo_rfid_control";
+        compatible = "rfid_control";
         status = "disable";
     };
     

@@ -34,6 +34,8 @@ EXTRA_CFLAGS += -Wall
 OBJS  	= rfid.o
 
 MODULE_NAME := rfid
+APP_TARGET := rfid_app
+APP_CFLAGS := -Wall -Werror -D_GNU_SOURCE -std=c99 -fno-strict-aliasing -Os
 
 #####################################Platform Related ###################################################
 
@@ -82,7 +84,7 @@ obj-m := $(MODULE_NAME).o
 
 else
 
-all: modules strip
+all: modules strip app
 	@echo "make all first step!"
 modules:
 	@echo "make modules!"
@@ -91,13 +93,23 @@ modules:
 
 strip:
 	@if [  -f $(MODULE_NAME).ko ]; then $(CROSS_COMPILE)strip $(MODULE_NAME).ko --strip-unneeded; fi;
-	
-.PHONY: modules clean test
+
+app: $(APP_TARGET)
+
+$(APP_TARGET): rfid_app.o
+	$(CROSS_COMPILE)gcc $^ -o $@
+	$(CROSS_COMPILE)strip $@ --strip-unneeded
+
+rfid_app.o: rfid_app.c
+	$(CROSS_COMPILE)gcc $(APP_CFLAGS) -c $< -o $@
+		
+.PHONY: modules app clean test
 
 clean:
 	rm -rf *.o* *.ko* *.mod.c *.mod.* *.bak *.order *.symvers 
 	rm -rf .*.o.cmd .*.ko.cmd .*.mod.o.cmd
 	rm -rf .tmp_versions 
+	rm -rf $(APP_TARGET)
 
 test:
 	@echo $(CUR_DIR)
@@ -106,8 +118,6 @@ test:
 	@echo $(OBJS)
 
 endif
-
-
 
 
 
