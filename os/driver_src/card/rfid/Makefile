@@ -96,11 +96,14 @@ strip:
 
 app: $(APP_TARGET)
 
-$(APP_TARGET): rfid_app.o
+$(APP_TARGET): rfid_app.o PwmControl.o
 	$(CROSS_COMPILE)gcc $^ -o $@
 	$(CROSS_COMPILE)strip $@ --strip-unneeded
 
 rfid_app.o: rfid_app.c
+	$(CROSS_COMPILE)gcc $(APP_CFLAGS) -c $< -o $@
+
+PwmControl.o: PwmControl.c PwmControl.h
 	$(CROSS_COMPILE)gcc $(APP_CFLAGS) -c $< -o $@
 		
 .PHONY: modules app clean test
@@ -118,7 +121,6 @@ test:
 	@echo $(OBJS)
 
 endif
-
 
 
 

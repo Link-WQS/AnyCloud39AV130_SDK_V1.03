@@ -82,7 +82,7 @@ static int rfid_code_leave_wait(int *level, int min, int middle, int max, struct
 
 	u64 us = 0;
 	struct timeval tv;
-
+	static int prev_level = 0;
 	int cur_level = gpio_get_value(rfid_gpio_index);
 	while (gpio_get_value(rfid_gpio_index) == cur_level)
 	{
@@ -96,6 +96,12 @@ static int rfid_code_leave_wait(int *level, int min, int middle, int max, struct
 		}
 	}
 
+	if(prev_level != cur_level)
+	{
+		prev_level = cur_level;
+		printk("rfid gpio level change:%d\n", cur_level);
+	}
+	
 	do_gettimeofday(&tv);
 	us = diff_us(tv, (*pre_tv));
 	*level = cur_level ? 0 : 1;
