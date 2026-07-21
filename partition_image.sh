@@ -5,6 +5,7 @@ UPGRADE_IMAGE_DIR=$TARGET_DIR/image/
 upgrade_bin_name=$TARGET_DIR/ANYKA_130L.IMG
 uboot_raw_upgrade_name=$TARGET_DIR/ANYKA_130L_UBOOT_RAW.IMG
 PARTITION_CFG=$TARGET_DIR/tools/envtool/env_av130_64M_spinor.cfg
+SDK_ROOT_DIR=$TARGET_DIR
 upgrade_bin_version=$(date +"%Y%m%d%H%M%S")
 HEADER_ALIGN=64
 UPGRADE_IMAGE_END_MARKER="# <- this is end of image parttion"
@@ -18,6 +19,14 @@ USR_NAME="usr.sqsh4"
 CONFIG_NAME="usr.jffs2"
 APP_NAME="app.sqsh4"
 DATA_NAME="data.jffs2"
+
+if [ -f "$SDK_ROOT_DIR/config.mk" ]; then
+    # shellcheck disable=SC1090
+    source "$SDK_ROOT_DIR/config.mk"
+    if [ "$CONFIG_WIFI_TYPE" != "NO_WIFI" ]; then
+        PARTITION_CFG=$TARGET_DIR/tools/envtool/env_av130_64M_spinor_wifi.cfg
+    fi
+fi
 
 UBOOT_PARTTION="UBOOT"
 ENV_PARTTION="ENV"

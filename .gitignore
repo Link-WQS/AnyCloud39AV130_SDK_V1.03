@@ -7,10 +7,14 @@
 /SAT_ANYKA_130L.IMG
 
 # Generated boot/burn artifacts
-/tools/burntool/u-boot.bin
-/tools/burntool/*.dtb
-/tools/burntool/*.img
-/tools/burntool/*.md5
+/tools/burntool/
+/rootfs/rootfs/lib/modules/*
+/rootfs/*.jffs2
+/rootfs/*.sqsh4
+/rootfs/ko/internal/lib/modules/4.4.302-cip94/kernel/
+/rootfs/rootfs/
+/rootfs/ko/
+/os/driver/internal/lib/modules/
 
 # Common transient files.
 # Keep shipped runtime artifacts such as *.ko, deliverable metadata such as
