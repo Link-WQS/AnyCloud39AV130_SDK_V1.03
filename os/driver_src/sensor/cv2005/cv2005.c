@@ -7,13 +7,18 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-
+//读寄存器
+// echo 0x3002 > /sys/bus/i2c/devices/0-0035/sensor_reg
+// cat /sys/bus/i2c/devices/0-0035/sensor_reg
+//写寄存器
+// echo "0x3002 0x12" > /sys/bus/i2c/devices/0-0035/sensor_reg_write
 #include <linux/delay.h>
 #include <linux/gpio.h>
 #include <linux/gpio/consumer.h>
 #include <linux/i2c.h>
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/mutex.h>
 #include <linux/of_gpio.h>
 #include <linux/of.h>
 #include <linux/slab.h>
@@ -251,6 +256,8 @@ struct cv2005_priv {
     enum raw_seq raw_bayer_seq;
     struct dual_sensor_attr dual;
     struct v4l2_ctrl* ctrl_sensor_get_id;
+    struct mutex dbg_lock;
+    unsigned int dbg_reg_addr;
 };
 
 /*default aec of fast boot*/
@@ -322,6 +329,8 @@ static int call_sensor_sys_init(void);
 static int call_sensor_sys_deinit(void);
 static int cv2005_read(const struct i2c_client *client, int reg);
 static int cv2005_write(struct i2c_client* client, int reg, int value);
+static int cv2005_create_dbg_sysfs(struct cv2005_priv *priv);
+static void cv2005_remove_dbg_sysfs(struct cv2005_priv *priv);
 
 static u32 cv2005_codes[] = {
     MEDIA_BUS_FMT_YUYV8_2X8,
@@ -1142,6 +1151,8 @@ static int cv2005_probe(struct i2c_client *client,
     priv->cb_info.cb = &cv2005_cb;
     priv->cb_info.arg = priv;
     priv->client = client;
+    mutex_init(&priv->dbg_lock);
+    priv->dbg_reg_addr = ID_REG_L;
 
     if (!client->dev.of_node) {
         dev_err(&client->dev, "Missing platform_data for driver\n");
@@ -1192,6 +1203,12 @@ static int cv2005_probe(struct i2c_client *client,
     client_new_addr();
     priv->master_or_slave = SINGLE_MODE;
 
+    ret = cv2005_create_dbg_sysfs(priv);
+    if (ret < 0) {
+        dev_err(&client->dev, "cv2005 create debug sysfs fail, ret:%d\n", ret);
+        goto err_subdev;
+    }
+
     dev_info(&adapter->dev, "cv2005 Probed success, subdev:%p\n", &priv->subdev);
 
     /*ak platform need export some informations from sensor*/
@@ -1199,6 +1216,10 @@ static int cv2005_probe(struct i2c_client *client,
 
     return 0;
 
+err_subdev:
+    list_del_init(&priv->list);
+    v4l2_async_unregister_subdev(&priv->subdev);
+    v4l2_device_unregister_subdev(&priv->subdev);
 err_videoprobe:
     v4l2_ctrl_handler_free(&priv->hdl);
 err_clk:
@@ -1222,6 +1243,7 @@ static int cv2005_remove(struct i2c_client *client)
         pr_err("%s had remove\n", __func__);
         return 0;
     }
+    cv2005_remove_dbg_sysfs(priv);
     list_del_init(&priv->list);
 
     /*unregister async subdev*/
@@ -1402,7 +1424,7 @@ static int cv2005_sensor_init_func(void *arg, const AK_ISP_SENSOR_INIT_PARA *npa
         }
 #endif
         cv2005_write(client, preg_info->reg_addr, preg_info->value);
-#if 0
+#if 1
         {
             int value;
 
@@ -1773,13 +1795,24 @@ static int cv2005_sensor_probe_id_func(void *arg)  //use IIC bus
     struct cv2005_priv *priv = arg;
     struct i2c_client *client = priv->client;
     int id;
-    int value;
+    int id_h;
+    int id_l;
 
-    value = cv2005_read(client, ID_REG_H);
-    id = value << 8;
+    id_h = cv2005_read(client, ID_REG_H);
+    if (id_h < 0) {
+        pr_err("%s read ID_REG_H(0x%04x) failed: %d\n",
+            __func__, ID_REG_H, id_h);
+        return 0;
+    }
 
-    value = cv2005_read(client, ID_REG_L);
-    id |= value;
+    id_l = cv2005_read(client, ID_REG_L);
+    if (id_l < 0) {
+        pr_err("%s read ID_REG_L(0x%04x) failed: %d\n",
+            __func__, ID_REG_L, id_l);
+        return 0;
+    }
+
+    id = (id_h << 8) | id_l;
 
     pr_err("id:%x\n", id);
 
@@ -1916,7 +1949,6 @@ static int cv2005_sensor_get_parameter_func(void *arg, int param, void *value)
 static int cv2005_sensor_set_power_on_func(void *arg)
 {
     struct cv2005_priv *priv = arg;
-    struct i2c_client *client = priv->client;
 
     if (priv->gpio_pwdn >= 0) {
         gpio_direction_output(priv->gpio_pwdn, !SENSOR_PWDN_LEVEL);
@@ -1928,8 +1960,8 @@ static int cv2005_sensor_set_power_on_func(void *arg)
         gpio_direction_output(priv->gpio_reset, SENSOR_RESET_LEVEL);
         msleep(5);
         gpio_direction_output(priv->gpio_reset, !SENSOR_RESET_LEVEL);
-        //msleep(100);
     }
+    msleep(20);
 
     aec_parms_init(priv);
 
@@ -1943,7 +1975,6 @@ static int cv2005_sensor_set_power_on_func(void *arg)
 static int cv2005_sensor_set_power_off_func(void *arg)
 {
     struct cv2005_priv *priv = arg;
-    struct i2c_client *client = priv->client;
 
     if (priv->gpio_pwdn >= 0) {
         //gpio_direction_input(priv->gpio_pwdn);
@@ -2062,6 +2093,92 @@ static AK_ISP_SENSOR_CB cv2005_cb = {
 static int sensor_id_func(void)
 {
     return cv2005_sensor_read_id_func(NULL);
+}
+
+static ssize_t cv2005_reg_show(
+    struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct i2c_client *client = to_i2c_client(dev);
+    struct cv2005_priv *priv = to_cv2005(client);
+    unsigned int reg;
+    int value;
+
+    mutex_lock(&priv->dbg_lock);
+    reg = priv->dbg_reg_addr;
+    value = cv2005_read(client, reg);
+    mutex_unlock(&priv->dbg_lock);
+
+    if (value < 0)
+        return snprintf(buf, PAGE_SIZE,
+            "read reg 0x%04x failed: %d\n", reg, value);
+
+    return snprintf(buf, PAGE_SIZE, "0x%04x: 0x%02x\n", reg, value & 0xff);
+}
+
+static ssize_t cv2005_reg_store(
+    struct device *dev, struct device_attribute *attr,
+    const char *buf, size_t count)
+{
+    struct i2c_client *client = to_i2c_client(dev);
+    struct cv2005_priv *priv = to_cv2005(client);
+    unsigned int reg;
+
+    if (sscanf(buf, "%x", &reg) != 1)
+        return -EINVAL;
+
+    mutex_lock(&priv->dbg_lock);
+    priv->dbg_reg_addr = reg;
+    mutex_unlock(&priv->dbg_lock);
+
+    return count;
+}
+
+static ssize_t cv2005_reg_write_store(
+    struct device *dev, struct device_attribute *attr,
+    const char *buf, size_t count)
+{
+    struct i2c_client *client = to_i2c_client(dev);
+    struct cv2005_priv *priv = to_cv2005(client);
+    unsigned int reg;
+    unsigned int value;
+    int ret;
+
+    if (sscanf(buf, "%x %x", &reg, &value) != 2)
+        return -EINVAL;
+
+    mutex_lock(&priv->dbg_lock);
+    ret = cv2005_write(client, reg, value);
+    if (!ret)
+        priv->dbg_reg_addr = reg;
+    mutex_unlock(&priv->dbg_lock);
+
+    if (ret < 0)
+        return ret;
+
+    return count;
+}
+
+static DEVICE_ATTR(sensor_reg, 0644, cv2005_reg_show, cv2005_reg_store);
+static DEVICE_ATTR(sensor_reg_write, 0200, NULL, cv2005_reg_write_store);
+
+static struct attribute *cv2005_dbg_attrs[] = {
+    &dev_attr_sensor_reg.attr,
+    &dev_attr_sensor_reg_write.attr,
+    NULL,
+};
+
+static const struct attribute_group cv2005_dbg_attr_group = {
+    .attrs = cv2005_dbg_attrs,
+};
+
+static int cv2005_create_dbg_sysfs(struct cv2005_priv *priv)
+{
+    return sysfs_create_group(&priv->client->dev.kobj, &cv2005_dbg_attr_group);
+}
+
+static void cv2005_remove_dbg_sysfs(struct cv2005_priv *priv)
+{
+    sysfs_remove_group(&priv->client->dev.kobj, &cv2005_dbg_attr_group);
 }
 
 static char *sensor_if_func(void)

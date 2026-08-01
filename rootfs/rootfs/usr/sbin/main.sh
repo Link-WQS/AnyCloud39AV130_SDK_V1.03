@@ -89,9 +89,15 @@ ifconfig eth0 up
 # 	/bin/mount -t yaffs2 $partition_data /data
 # fi
 
+if test ! -e "/etc/config/disable_auto_insmod_ko" ; then
 insmod /usr/modules/ak_isp.ko
 insmod /usr/modules/sensor_cv2005.ko check_id=1
+
+insmod /usr/modules/ak_venc_adapter.ko 
+insmod /usr/modules/ak_venc_bridge.ko 
+
 insmod /usr/modules/ak_saradc.ko
+fi
 
 #start system service
 /usr/sbin/service.sh start &
