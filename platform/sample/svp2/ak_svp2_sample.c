@@ -72,6 +72,45 @@ typedef struct BOX
     int y2;
 }BOX;
 
+static AK_SVP2_MODEL_E get_svp_model_type(int mode)
+{
+    switch (mode)
+    {
+    case 0:
+        return AK_SVP2_MODEL_HD_180P;
+    case 2:
+        return AK_SVP2_MODEL_HD_360P;
+    case 9:
+        return AK_SVP2_MODEL_0X0A00000C;
+    default:
+        return AK_SVP2_MODEL_MAX;
+    }
+}
+
+static int get_svp_model_resolution(int mode, int *width, int *height)
+{
+    if(width == NULL || height == NULL)
+        return -1;
+
+    switch (mode)
+    {
+    case 0:
+        *width = 320;
+        *height = 180;
+        return 0;
+    case 2:
+        *width = 640;
+        *height = 360;
+        return 0;
+    case 9:
+        *width = 320;
+        *height = 192;
+        return 0;
+    default:
+        return -1;
+    }
+}
+
 /*     ***********************************
     ***********************************
     *
@@ -91,7 +130,7 @@ static char ac_option_hint[  ][ LEN_HINT ] = {
     "[NUM]		检测帧率调节[1 30]，注意指的是每多少帧检测一帧!" ,
     "[PATH]		ISP config file 保存路径, 默认为空,需要填写" ,
     "[PATH]		SVP config file 保存路径, 默认为空,需要填写" ,
-    "[NUM]      人形人脸检测模型，0：320*180",
+    "[NUM]      检测模型，0：320*180，2：640*360，9：0x0A00000C(320*192)" ,
     "[NUM]      人形人脸检测数据类型，0：YUV，1：RGB",
     "[NUM]      人形滤波功能(filter+md)，0：disable(only svp)，1：svp+md，2: svp+filter+md"
 };
@@ -270,7 +309,7 @@ static int start_vi(int dev_id)
     int subwidth = 640;
     int subheight = 360;
     int thdwidth = 320;
-    int thdheight = 180;
+    int thdheight = 192;
 
     int crop_width = width;
     int crop_height = height;
@@ -385,14 +424,11 @@ static int start_vi(int dev_id)
     /*
      * step 7: set third channel attribute
      */
-    if(svp_mode == 1)
+    if(get_svp_model_resolution(svp_mode, &thdwidth, &thdheight) != 0)
     {
-        thdwidth = 480;
-        thdheight = 270;
-    }else if(svp_mode == 2 || svp_mode == 3)
-    {
-        thdwidth = 640;
-        thdheight = 360;
+        ak_print_error_ex(MODULE_ID_APP, "unsupported svp_mode=%d\n", svp_mode);
+        ak_vi_close(dev_id);
+        return AK_FAILED;
     }
     memset(&chn_attr_td, 0, sizeof(VI_CHN_ATTR_EX));
     chn_attr_td.chn_id = chn_trd_id;
@@ -488,10 +524,13 @@ static int start_svp(void)
     memset(attr, 0, svp_len);
     attr->model_num = model_num;
 
-    if(svp_mode == 0)
-        attr->model_attr->model_type = AK_SVP2_MODEL_HD_180P;
-    else if(svp_mode == 2)
-        attr->model_attr->model_type = AK_SVP2_MODEL_HD_360P;
+    attr->model_attr->model_type = get_svp_model_type(svp_mode);
+    if(attr->model_attr->model_type == AK_SVP2_MODEL_MAX)
+    {
+        ak_print_error_ex(MODULE_ID_APP, "unsupported svp_mode=%d\n", svp_mode);
+        ak_mem_free(attr);
+        return AK_FAILED;
+    }
 
     /* set svp classsify threshold, default is 700, range[400-900],
      * the less, the more sensitive, but the less accurate
@@ -813,7 +852,7 @@ int main(int argc, char **argv)
     }
     /*check param validate*/
     if( svp_rate > 30 || svp_rate <= 0 || frame_num < 0 || frame_num > 1000
-    || (svp_mode != 0 && svp_mode != 2)
+    || (get_svp_model_type(svp_mode) == AK_SVP2_MODEL_MAX)
     || (svp_data_type != 0 && svp_data_type != 1)
     || (filter_enable != 0 && filter_enable != 1 && filter_enable != 2))
     {
